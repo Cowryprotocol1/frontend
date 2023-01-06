@@ -15,15 +15,15 @@ type MainboardProps = {
 const Mainboard: NextPageWithLayout<MainboardProps> = ({title}) => {
 
   const [name, setName] = useState("")
-  const { userData, role, toggleLogoutMode } = useUser();
+  const { userData, toggleLogoutMode } = useUser();
 
   const { push } = useRouter();
   useEffect(() => {
     if (userData && typeof userData === 'object') {
-      if (userData && role !== null) {
+      if (userData && userData?.role !== null) {
         setName(userData?.name)
       }
-      else if (userData && role === null) {
+      else if (userData && userData?.role === null) {
         const logout = toggleLogoutMode();
         console.log(logout, "logout")
         if (logout) {
@@ -35,11 +35,11 @@ const Mainboard: NextPageWithLayout<MainboardProps> = ({title}) => {
   
 
   return (
-    <div className="parent md:h-screen md:grid md:grid-cols-8">
+    <div className="parent md:min-h-full md:grid md:grid-cols-8">
       <Header />
       <main className="main bg-brand-background md:col-span-6">
-        <div className='md:z-[100] md:h-screen w-full bg-white_day md:-ml-12 md:rounded-l-3xl -pr-12'>
-          <TopBar username={name} role={role}/>
+        <div className='md:z-[100] md:min-h-full w-full bg-white_day md:-ml-12 md:rounded-l-3xl -pr-12'>
+          <TopBar username={name} role={userData?.role}/>
           <h1>{title}</h1>
         </div>
       </main>
