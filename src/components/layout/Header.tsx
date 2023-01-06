@@ -2,7 +2,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React, {useEffect,useState } from 'react';
-
+import Discord from './Discord';
 import Avatar from '@/components/icons/avatar';
 import MobileHeader from '@/components/layout/HeaderMobile';
 import HeaderButton from '@/components/links/Headerbutton';
@@ -14,6 +14,8 @@ import Logo from '../../../public/images/logo_name.png'
 import LogoWhite from '../../../public/images/logo_name_white.png'
 import PassBg from '../../../public/images/pass_back.png'
 import { useRouter } from 'next/router';
+
+const discordLink = "https://discord.gg/KKUvH4qM";
 export default function Header() {
   const [user, setUser] = useState({})
   const [walletAddress, setWalletAddress] = useState("")
@@ -59,9 +61,9 @@ export default function Header() {
   return (
     <>
     {route === "users" &&
-    <section className={`bg-brand_primary_blue hidden md:block sidebar md:pl-8 md:pr-12  md:col-span-2`}>
-      <Image src={Logo}className="mb-8 mt-8 pr-8" alt="Logo" onClick={handleLogOut}/>
-      <div className="relative w-full">
+    <section className={`min-h-full h-[100vh] bg-brand_primary_blue hidden md:block sidebar md:pl-8 md:pr-12  md:col-span-2`}>
+      <Image src={Logo}className="mb-8 mt-8 pr-8 cursor-pointer" alt="Logo" onClick={handleLogOut}/>
+      <div className="relative w-full lg:mb-6">
         <Image src={PassBg} alt="passbg" className="absolute top-0 right-12"/>
          <Avatar src={image} alt={name} width={70} height={70} className="img-circle mt-10 -ml-12" editBg="bg-brand_primary_green"/>
         <Text avatar="avatar_name">{name}</Text>
@@ -80,11 +82,12 @@ export default function Header() {
           ))}
         </ul>
       </div>
+      <Discord link={discordLink}/>
     </section>
     }
     {route === "ifps" &&
     <section className={`bg-brand_primary_green hidden md:block sidebar md:pl-8 md:pr-12  md:col-span-2`}>
-      <Image src={LogoWhite}className="mb-8 mt-8 pr-8" alt="Logo" onClick={handleLogOut}/>
+      <Image src={LogoWhite}className="mb-8 mt-8 pr-8 cursor-pointer" alt="Logo" onClick={handleLogOut}/>
       <div className="relative w-full">
         <Image src={PassBg} alt="passbg" className="absolute top-0 right-12"/>
          <Avatar src={image} alt={name} width={70} height={70} className="img-circle mt-10 -ml-12" editBg="bg-brand_primary_blue"/>
@@ -104,6 +107,7 @@ export default function Header() {
           ))}
         </ul>
       </div>
+      <Discord link={discordLink}/>
     </section>
     }
     <MobileHeader image={image} alt={image} route={route} handleLogOut={handleLogOut}/>

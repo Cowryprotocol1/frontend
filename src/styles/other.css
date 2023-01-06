@@ -3,6 +3,13 @@
   align-items: center;
   padding-right:3rem;
 }
+.bg-home{
+  background: url('../../public/images/bg_home.png');
+}
+.bg-filter{
+  background: linear-gradient(157.08deg, rgba(255, 255, 255, 0.2) 10.7%, rgba(255, 255, 255, 0.056) 85.94%);
+  backdrop-filter: blur(1.75px);
+}
 .logo_name_svg__logo_name{
   font-size: 200px;
 }
