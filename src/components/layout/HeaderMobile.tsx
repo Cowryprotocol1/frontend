@@ -2,7 +2,7 @@ import Image from 'next/image';
 import React, { useEffect,useState } from 'react';
 import { CgMenuLeftAlt } from 'react-icons/cg';
 import { SlClose } from 'react-icons/sl';
-
+import Hamburger from '../../../public/images/hamburger_grey.png'
 import HeaderButton from '@/components/links/Headerbutton';
 
 import { useUser } from '@/store/user';
@@ -48,7 +48,14 @@ export default function MobileHeader({ alt, image, route, handleLogOut }: Mobile
   ];
   return (
     <header className="md:hidden xs:bg-white_day xs:flex flex-row justify-between p-3 lg:hiden shadow-[0px_1px_4px_rgba(0,0,0,0.5)]">
-      <CgMenuLeftAlt size={25} onClick={toggleModal}/>
+      {/* <CgMenuLeftAlt size={25} onClick={toggleModal}/> */}
+      <Image 
+        src={Hamburger}
+        alt="hamburger"
+        width={25}
+        className="h-[25px]"
+        onClick={toggleModal}
+        />
       <div className="md:hidden xs:flex flex-row justify-around">
       <Image
         src={image}
