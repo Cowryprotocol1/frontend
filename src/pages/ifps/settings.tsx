@@ -8,7 +8,6 @@ function Settings() {
   }
   return (
     <div>
-      {/* <WrapperComponent myComponent={Mainboard} data={settingsData}/> */}
       <Mainboard title={settingsData.title}/>
     </div>
   );

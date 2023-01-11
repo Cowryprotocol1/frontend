@@ -2,6 +2,10 @@ import React, { createContext, useContext, useEffect,useState } from "react";
 
 import { User } from "@/constant/dummydata";
 
+import { redirectUrl } from '@/pages';
+
+const url = `https://cowryprotocol.io`;
+
 export type UserProp = {
   id: number;
   name: string;
@@ -16,13 +20,15 @@ export type UserContextProps = {
   setUserData: React.Dispatch<React.SetStateAction<UserProp>>;
   initialUserStatus: any;
   initialUserWithWalletStatus: any;
-  
+  walletAddress: "";
+  setWalletAddress: React.Dispatch<React.SetStateAction<any>>;
+
   logout: boolean;
   setLogout:  React.Dispatch<React.SetStateAction<boolean>>;
   toggleLogoutMode: any;
+  handleLogin: any;
 
   role: string;
-  initialRoleStatus: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const UserContext = createContext<UserContextProps>({
@@ -30,13 +36,15 @@ const UserContext = createContext<UserContextProps>({
   setUserData: () => null,
   initialUserStatus: ()=> null,
   initialUserWithWalletStatus:()=> null,
-
+  handleLogin:() => null,
   logout: null ,
   setLogout: ()=> null,
   toggleLogoutMode: ()=>null,
 
   role: "",
-  initialRoleStatus: ()=> null,
+
+  walletAddress: "",
+  setWalletAddress: () => null,
 
 });
 
@@ -55,7 +63,7 @@ const initialUserStatus = () => {
 
 }
 
-const initialUserWithWalletStatus = () => {
+const initialUserWithWalletStatus = (data: string) => {
   if (typeof window === "undefined") return;
   // const user = localStorage.getItem("userType") 
   const userData = localStorage.getItem("userData")
@@ -70,7 +78,8 @@ const initialUserWithWalletStatus = () => {
   }
   else{
     // get user role status from cowryprotocol backend
-    let isBackend = false;
+    
+    let isBackend = false
     if (isBackend) {
       if (JSON.parse(userData).role === "user") {
         // localStorage.setItem("userType", user);
@@ -111,15 +120,44 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [userData, setUserData] = useState(initialUserWithWalletStatus);
   const [logout, setLogout] = useState(false)
   const [role, setRole] = useState(initialRoleStatus)
-//  console.log(JSON.parse(localStorage.getItem("userData")), "xdsds")
+  const [walletAddress, setWalletAddress] = useState(null);
+
   const toggleLogoutMode = () => {
     if (logout !== null) {
       setLogout(true);
       localStorage.removeItem("logout")
-      setUserData(initialUserWithWalletStatus);
-      localStorage.removeItem("userData")
+      // setUserData(initialUserWithWalletStatus);
+      localStorage.removeItem("walletAddress")
+      window.location.href = "/";
     } 
     return logout;
+  
+  };
+  const handleLogin = () => {
+    console.log(walletAddress,"hi login handle function")
+    const walletAdd = localStorage.getItem("walletAddress")
+   
+  if ( walletAdd === null && walletAddress !== null) {
+    // console.log(userData,"see me user")
+    localStorage.setItem("walletAddress", walletAddress)
+  }
+    fetch(`${url}/accounts?account_id=${walletAddress}`)
+      .then(response => response.json())
+      .then(response => {
+          console.log(response, "response")
+          if (response.status === "fail") {
+            window.location.href = "/users/dashboard";
+            setRole("user")
+          }
+          else{
+            window.location.href = "/ifps/dashboard";
+            setRole("ifp")
+          }
+      })
+      .catch(err => {
+        console.error(err) 
+      });
+
   
   };
   useEffect(() => {
@@ -131,14 +169,15 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       userData, 
       setUserData, 
       initialUserStatus,
- 
+      handleLogin,
+      walletAddress, 
+      setWalletAddress, 
       logout,
       setLogout,
       toggleLogoutMode,
 
       role,
-      initialRoleStatus,
-      initialUserWithWalletStatus
+      initialUserWithWalletStatus,
     }}>
       {children}
     </UserContext.Provider>

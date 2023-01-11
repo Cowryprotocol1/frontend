@@ -5,81 +5,35 @@ import { SlClose } from 'react-icons/sl';
 import Layout from '@/components/layout/Layout';
 import UnderlineLink from '@/components/links/UnderlineLink';
 import Seo from '@/components/Seo';
-import { Dialog, Menu } from "@headlessui/react";
+import { Dialog } from "@headlessui/react";
 import { useUser } from '@/store/user';
 import Text from '@/components/text';
 import LogoName from '../../public/images/logo_name.png';
 import LogoC from '../../public/images/logo_c.png';
 import Hamburger from '../../public/images/hamburger_green.png';
-import { User } from "@/constant/dummydata";
 import { kit } from '@/store/wallet_connect';
-import Logo from '../../public/images/large-og.png';
 import { useState } from 'react';
 import Modal from '@/components/modal';
 import { WalletType } from 'stellar-wallets-kit';
-import { HiArrowRightCircle } from 'react-icons/hi2';
 import Spinner from '@/components/layout/Spinner';
 import { SiHiveBlockchain } from 'react-icons/si';
+
+
+export const redirectUrl = (url: string)=>{
+  const { push } = useRouter();
+  push(url);
+}
+
 export default function HomePage() {
-  const {setUserData, initialUserWithWalletStatus, userData} = useUser();
-  const [availableWallets, setAvailableWallets] = useState(null)
+  const [availableVendors, setAvailableVendors] = useState(null)
+  const {setWalletAddress, walletAddress, handleLogin} = useUser();
   const [modalOpen, setModalOpen] = useState(false);
   const [showFirstModal, setShowFirstModal] = useState(false);
   const [modalList, setModalList] = useState(false);
-  const [publicKey, setPublicKey] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const [close, setClose] = useState("hidden");
-  const [wallet, setWallet] = useState(null)
 
-  const { push } = useRouter();
 
-  const handleUser = (user: string)=>{
-    localStorage.setItem("userType", user);
-    if (user === "user") {
-      
-      localStorage.setItem("userData", JSON.stringify(User[0]))
-      setUserData(User[0]);
-      push("/users/dashboard");
-    }
-    else if (user === "ifp") {
-      localStorage.setItem("userData", JSON.stringify(User[1]))
-      setUserData(User[1]);
-      push("/ifps/dashboard");
-    }
-  }
-
-  const handleUserWithWallet = ()=>{
-    console.log(userData)
-    if (userData?.wallet_address !== publicKey) {
-      setUserData({
-        ...userData,
-        wallet_address: publicKey
-      })
-    }
-
-    if (userData !== null && publicKey) {
-      if (userData.role === "user") {
-        setTimeout(() => {
-          push("/users/dashboard");
-          setIsLoading(false)
-        }, 5000);
-      }
-      else if (userData.role === "ifp") {
-        setTimeout(() => {
-          push("/ifps/dashboard");
-          setIsLoading(false)
-        }, 3000);
-        
-      }
-  
-    }
-    else{
-      initialUserWithWalletStatus();
-      setIsLoading(false)
-    }
-  }
-
-  
   const handleCloseModal = () => {
     setModalList(true)
     setModalOpen(false)
@@ -110,19 +64,8 @@ export default function HomePage() {
     }
     try {
       await kit.setWallet(x)
-      const publicKeye = await kit.getPublicKey()
-      setPublicKey(publicKeye);
-      
-      // if (publicKey !== null) {
-      //   initialUserWithWalletStatus();
-      //   setTimeout(() => {
-      //     handleUserWithWallet();
-      //   }, 3000);
-        
-      // }
-      
-      // return publicKeye;
-      
+      const publicKey = await kit.getPublicKey()
+      setWalletAddress(publicKey)
     } catch (e) {
       console.log(e);
     }
@@ -130,9 +73,9 @@ export default function HomePage() {
   }
   async function getWalletList() {
     try {
-      const wallets = await kit.getSupportedWallets();
-      setAvailableWallets(wallets);
-      return wallets;
+      const vendors = await kit.getSupportedWallets();
+      setAvailableVendors(vendors);
+      return vendors;
     } catch (e) {
       console.log(e);
     }
@@ -143,10 +86,10 @@ export default function HomePage() {
   }, []);
   
   useEffect( () => {
-    // initialUserWithWalletStatus();
-    handleUserWithWallet();
-    console.log(publicKey, "publick")
-  }, [publicKey]);
+    if (walletAddress !== null) {
+      handleLogin()
+    } 
+  }, [walletAddress]);
 
   return (
     <Layout>
@@ -175,7 +118,14 @@ export default function HomePage() {
               <a className="text-white my-2 mx-8 lg:m-8 font-thin cursor-pointer hover:text-[#21C460]">About us</a>
               <a className="text-white my-2 mx-8 lg:m-8 font-thin cursor-pointer hover:text-[#21C460]">How it works</a>
               <a className="text-white my-2 mx-8 lg:m-8 font-thin cursor-pointer hover:text-[#21C460]">FAQs</a>
-              <a className="text-white my-2 mx-8 py-2 px-6 font-thin hover:bg-white hover:text-[#21C460] cursor-pointer bg-[#21C460] rounded-sm">Get Started</a>
+              <a className="text-white my-2 mx-8 py-2 px-6 font-thin hover:bg-white hover:text-[#21C460] cursor-pointer bg-[#21C460] rounded-sm"
+                onClick={() => {
+                  setModalOpen(true)
+                  setShowFirstModal(true) 
+                  setModalList(false)
+                }}
+              >Get Started
+              </a>
             </div>
             <div className="block lg:hidden cursor-pointer">
               <Image 
@@ -237,7 +187,7 @@ export default function HomePage() {
               :
               <div className="mt-10 w-full flex flex-col justify-center gap-5">
                 {modalList ?
-                availableWallets.map(({name, type}, index)=>{
+                availableVendors.map(({name, type}, index)=>{
                   return (
                     <button key={index} className=' bg-brand_background py-4 w-full px-10 text-white_night flex flex-row justify-center items-center hover:bg-brand_tertiary_grey' onClick={()=>{
                       handleSelectedWallet(type)

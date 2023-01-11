@@ -9,7 +9,7 @@ module.exports = {
       fontFamily: {
         primary: "Space Grotesk",
       },
-      screens: { lg: "1024px", xl: "1281px", "2xl": "1441px", "3xl": "1729px", 'xs': '270px' },
+      screens: {  md: "821px", lg: "1024px", xl: "1281px", "2xl": "1441px", "3xl": "1729px", 'xs': '270px' },
       colors: {
         'black_day': "#000000",
         black_night: "#64748B",
