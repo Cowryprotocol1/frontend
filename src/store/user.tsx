@@ -96,8 +96,8 @@ const initialUserWithWalletStatus = (data: string) => {
     else{
       console.log("see me genere")
       // localStorage.setItem("userType", user);
-      localStorage.setItem("userData", JSON.stringify(User[0]))
-      return User[0]
+      // localStorage.setItem("userData", JSON.stringify(User[0]))
+      return null
     }
     
   }
@@ -136,7 +136,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const handleLogin = () => {
     console.log(walletAddress,"hi login handle function")
     const walletAdd = localStorage.getItem("walletAddress")
-   
+    let x = localStorage.getItem("userType") 
   if ( walletAdd === null && walletAddress !== null) {
     // console.log(userData,"see me user")
     localStorage.setItem("walletAddress", walletAddress)
@@ -146,12 +146,22 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       .then(response => {
           console.log(response, "response")
           if (response.status === "fail") {
-            window.location.href = "/users/dashboard";
+            
+            if (x == null) {
+              localStorage.setItem("userType", "user") 
+            }
+            
             setRole("user")
+            window.location.href = "/users/dashboard";
+            
           }
           else{
-            window.location.href = "/ifps/dashboard";
+            if (x == null) {
+              localStorage.setItem("userType", "user") 
+            }
             setRole("ifp")
+            window.location.href = "/ifps/dashboard";
+            
           }
       })
       .catch(err => {
