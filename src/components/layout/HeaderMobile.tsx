@@ -4,16 +4,19 @@ import { CgMenuLeftAlt } from 'react-icons/cg';
 import { SlClose } from 'react-icons/sl';
 import Hamburger from '../../../public/images/hamburger_grey.png'
 import HeaderButton from '@/components/links/Headerbutton';
-
+import Avatar from '../icons/avatar';
+import Text from '../text';
+import PassBg from '../../../public/images/pass_back.png'
 import { useUser } from '@/store/user';
 type MobileHeaderProps = {
   alt: string;
   image: string;
   route: string;
+  walletAddress: string;
   handleLogOut: any;
 }
 
-export default function MobileHeader({ alt, image, route, handleLogOut }: MobileHeaderProps) {
+export default function MobileHeader({ alt, image, route, handleLogOut, walletAddress }: MobileHeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   
@@ -41,7 +44,7 @@ export default function MobileHeader({ alt, image, route, handleLogOut }: Mobile
 
   const links = [
     { id: 1, href: `/${route}/dashboard`, label: 'Dashboard' },
-    { id: 2, href: `/${route}/payment`, label: 'Payment Method'},
+    { id: 2, href: `/${route}/payment`, label: 'Payment'},
     { id: 3, href: `/${route}/settings`, label: 'Settings' },
     { id: 4, href: `/${route}/${labelRoute}`, label: label },
     { id: 5, href: "#", label: 'Logout'},
@@ -66,8 +69,13 @@ export default function MobileHeader({ alt, image, route, handleLogOut }: Mobile
       />
       </div>
       {isOpen && route === "users" && ( 
-        <div className={`fixed top-0 left-0 bg-brand_primary_blue w-2/3 h-fit p-4`}> 
+        <div className={`fixed top-0 left-0 bg-brand_primary_blue w-2/3 h-fit p-4 z-10`}> 
         <SlClose size={25} className="text-white_day mb-4" onClick={toggleModal}/>
+        <Image src={PassBg} alt="passbg" className="absolute top-16 right-16"/>
+         <Avatar src="https://picsum.photos/200" alt="avatar" width={70} height={70} className="img-circle mt-10 -ml-12" editBg="bg-brand_primary_green"/>
+        <Text avatar="avatar_name">{""}</Text>
+        <Text avatar="wallet_address">{walletAddress?.substring(0, 4)+"..."+ walletAddress?.substring(5, 9)}</Text>
+
         <ul className='flex items-center flex-col justify-center'>
           {links.map(({ id, href, label }) => (
             <HeaderButton 

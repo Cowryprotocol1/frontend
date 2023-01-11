@@ -1,15 +1,30 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import Mainboard from '@/pages/common/mainboard';
-
+import Balanceboard from '../common/balanceboard';
+import Transactionboard from '../common/transactionboard';
+import Transaction from '../common/transactions';
+import { IoIosArrowBack }  from 'react-icons/io';
 function Dashboard() {
   const dashboardData = {
-    title: "User Dashboard"
+    title: "Dashboard"
   }
+  const [isTxn, setIsTxn] = useState(false)
   return (
     <div>
-      {/* <WrapperComponent myComponent={Mainboard} data={dashboardData}/> */}
-      <Mainboard title={dashboardData.title}/>
+      <Mainboard title={!isTxn ? dashboardData.title : ""}>
+        {!isTxn ?
+        <div className="flex flex-col md:flex-row md:justify-between">
+          <Balanceboard amount="N34,444.00"/>
+          <Transactionboard amount="N34,444.00"/>
+        </div>
+        :
+        <span className="flex flex-row items-center font-thin text-xl mb-2"><IoIosArrowBack className="mr-3 cursor-pointer" onClick={()=>setIsTxn(false)} /> Transactions</span>
+        }
+        <div>
+        <Transaction isTxn={isTxn} setIsTxn={setIsTxn} />
+        </div>
+      </Mainboard>
     </div>
   );
 }

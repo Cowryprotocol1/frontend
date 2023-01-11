@@ -9,7 +9,6 @@ function Dashboard() {
   return (
     <div>
       <Mainboard title={dashboardData.title}/>
-      {/* <WrapperComponent myComponent={Mainboard} data={dashboardData}/> */}
     </div>
   );
 }

@@ -8,7 +8,6 @@ function Payment() {
   }
   return (
     <div>
-      {/* <WrapperComponent myComponent={Mainboard} data={paymentData}/> */}
       <Mainboard title={paymentData.title}/>
     </div>
   );
