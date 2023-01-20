@@ -10,16 +10,23 @@ import type { NextPageWithLayout } from "../_app";
 import { useUser } from "../../store/user";
 import {  RiBankFill } from 'react-icons/ri';
 import {  BsFillEyeFill, BsFillEyeSlashFill }  from 'react-icons/bs';
-import BImage from '../../../public/images/balance_image.png'
+import BImage from '../../../public/images/balance_image.png';
 type BalanceboardProps = {
-  amount: string;
   children?: any;
 }
 
-const Balanceboard: NextPageWithLayout<BalanceboardProps> = ({amount, children}) => {
+const Balanceboard: NextPageWithLayout<BalanceboardProps> = ({children}) => {
   const headerText: string = "Account Balance Details";
   const balanceText: string = "Cowry Balance";
   const [view, setView] = useState(true)
+
+  const {balances} =useUser();
+  const NGN = balances?.filter((bal)=> bal.asset_code === "NGN")
+  const NGNALLOW = balances?.filter((bal)=> bal.asset_code === "NGNALLOW")
+  const NGNLICENSE = balances?.filter((bal)=> bal.asset_code === "NGNLICENSE")
+  const USDC = balances?.filter((bal)=> bal.asset_code === "USDC")
+  const XLM = balances?.filter((bal)=> bal.asset_type === "native")
+
   return (
     <div className="relative w-full md:w-[65%]  h-[auto] mb-6 rounded-xl bg-white shadow-[0px_1px_0px_rgba(0,0,0,0.1)]">
       <Image src={BImage} alt="bal_image" className="w-[18%] right-0 absolute" />
@@ -31,7 +38,14 @@ const Balanceboard: NextPageWithLayout<BalanceboardProps> = ({amount, children})
               <RiBankFill  size={25} className=" text-brand_primary_green"/>
             </div>
             <div>
-              <Text className="font-bold text-xl">{view ? amount : "******"}</Text>
+              {NGN.length > 0 ? 
+              <Text className="font-bold text-xl">{view ? "₦"+ parseFloat(NGN[0]?.balance).toFixed(2) : "******"}</Text>
+              :
+              USDC.length > 0 ? 
+              <Text className="font-bold text-xl">{view ? "USDC "+parseFloat(USDC[0]?.balance).toFixed(2) : "******"}</Text>
+              : 
+              <Text className="font-bold text-xl">{view ? "XLM "+ parseFloat(XLM[0]?.balance).toFixed(2) : "******"}</Text>
+              }
               <Text className="font-thin text-sm text-[#818181]">{balanceText}</Text>
             </div>
           </div>

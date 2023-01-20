@@ -16,14 +16,27 @@ type MainboardProps = {
 const Mainboard: NextPageWithLayout<MainboardProps> = ({title, children}) => {
 
   const [name, setName] = useState("")
-  const { toggleLogoutMode, role } = useUser();
+  const { 
+    toggleLogoutMode, role, getTransactions, setTransactions,
+    getBalance, setBalances , walletAddress
+  } = useUser();
 
   useEffect(() => {
     const walletAddress = localStorage.getItem("walletAddress")
     if (walletAddress === null) {
       toggleLogoutMode()
     }
-  }, [])
+    // const d = getTransactions("GBZGNJFRXS2AQ6GQ2QNSRFTA54W6Z36KMTKSJ35GEWBXH4RWJLULLBVH" , "ifp")
+    let d = getTransactions(walletAddress , role)
+    d.then((res:any)=>{  
+      setTransactions(res.all_transactions)
+    })
+    // const g = getBalance("GBZGNJFRXS2AQ6GQ2QNSRFTA54W6Z36KMTKSJ35GEWBXH4RWJLULLBVH")
+    const g = getBalance(walletAddress)
+    g.then((res:any)=>{  
+      setBalances(res.balances)
+    })
+  }, [walletAddress, role])
   
 
   return (

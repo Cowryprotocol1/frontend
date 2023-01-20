@@ -5,7 +5,7 @@ import { User } from "@/constant/dummydata";
 import { redirectUrl } from '@/pages';
 
 const url = `https://cowryprotocol.io`;
-
+const stellar_url = ` https://horizon-testnet.stellar.org`
 export type UserProp = {
   id: number;
   name: string;
@@ -27,8 +27,15 @@ export type UserContextProps = {
   setLogout:  React.Dispatch<React.SetStateAction<boolean>>;
   toggleLogoutMode: any;
   handleLogin: any;
+  getTransactions: any;
+  getBalance: any;
 
   role: string;
+
+  transactions: any; 
+  setTransactions: React.Dispatch<React.SetStateAction<any>>;
+  setBalances:React.Dispatch<React.SetStateAction<any>>;
+  balances: any;
 };
 
 const UserContext = createContext<UserContextProps>({
@@ -40,12 +47,18 @@ const UserContext = createContext<UserContextProps>({
   logout: null ,
   setLogout: ()=> null,
   toggleLogoutMode: ()=>null,
+  getTransactions: ()=>null,
+  getBalance: ()=>null,
 
   role: "",
 
   walletAddress: "",
   setWalletAddress: () => null,
-
+  
+  transactions: null,
+  setTransactions: ()=> null,
+  balances: null,
+  setBalances: ()=> null
 });
 
 
@@ -82,6 +95,8 @@ const initialUserWithWalletStatus = (data: string) => {
     let isBackend = false
     if (isBackend) {
       if (JSON.parse(userData).role === "user") {
+        // User Data 
+
         // localStorage.setItem("userType", user);
         // localStorage.setItem("userData", JSON.stringify(User[0]))
         // setUserData(User[0]);
@@ -94,7 +109,7 @@ const initialUserWithWalletStatus = (data: string) => {
       }
     }
     else{
-      console.log("see me genere")
+      // console.log("see me genere")
       // localStorage.setItem("userType", user);
       // localStorage.setItem("userData", JSON.stringify(User[0]))
       return null
@@ -112,67 +127,93 @@ const initialRoleStatus = () => {
 }
 
 
-
-
-
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   // TODO: data is expected to obtained from api endpoint
   const [userData, setUserData] = useState(initialUserWithWalletStatus);
   const [logout, setLogout] = useState(false)
   const [role, setRole] = useState(initialRoleStatus)
   const [walletAddress, setWalletAddress] = useState(null);
+  const [transactions, setTransactions] = useState([]);
+  const [balances, setBalances] = useState([]);
+
+
 
   const toggleLogoutMode = () => {
     if (logout !== null) {
       setLogout(true);
       localStorage.removeItem("logout")
-      // setUserData(initialUserWithWalletStatus);
       localStorage.removeItem("walletAddress")
       window.location.href = "/";
     } 
     return logout;
   
   };
+  
+  const getTransactions = async (address: string, role: string)=> {
+    try {
+      const response = await fetch(`${url}/merchants?public_key=${address}&query_type=${role}`)
+      let res = response.json()
+      return res
+    } catch (error) {
+      throw error;
+    }
+  };
+  const getBalance = async (address: string)=> {
+    try {
+      const response = await fetch(`${stellar_url}/accounts/${address}`)
+      let res = response.json()
+      return res
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const getAccount = async (x)=> {
+    try {
+      const response = await fetch(`${url}/accounts?account_id=${walletAddress}`)
+      if (response.status === 200) {
+        const json = await response.json();
+        if (json.error) {
+            throw new Error(json.error);
+        }
+        if (x == null) {
+          localStorage.setItem("userType", "user") 
+        }
+        setRole("ifp")
+        window.location.href = "/ifps/dashboard";
+        return json;
+      }
+      else if (response.status === 404) {
+        if (x == null) {
+          localStorage.setItem("userType", "user") 
+        }
+        setRole("user")  
+        window.location.href = "/users/dashboard";
+      }
+      
+    } catch (error) {
+      throw error;
+    }
+  };
+
   const handleLogin = () => {
-    console.log(walletAddress,"hi login handle function")
     const walletAdd = localStorage.getItem("walletAddress")
     let x = localStorage.getItem("userType") 
   if ( walletAdd === null && walletAddress !== null) {
-    // console.log(userData,"see me user")
     localStorage.setItem("walletAddress", walletAddress)
   }
-    fetch(`${url}/accounts?account_id=${walletAddress}`)
-      .then(response => response.json())
-      .then(response => {
-          console.log(response, "response")
-          if (response.status === "fail") {
-            
-            if (x == null) {
-              localStorage.setItem("userType", "user") 
-            }
-            
-            setRole("user")
-            window.location.href = "/users/dashboard";
-            
-          }
-          else{
-            if (x == null) {
-              localStorage.setItem("userType", "user") 
-            }
-            setRole("ifp")
-            window.location.href = "/ifps/dashboard";
-            
-          }
-      })
-      .catch(err => {
-        console.error(err) 
-      });
-
-  
+    getAccount(x)
   };
   useEffect(() => {
     initialUserWithWalletStatus
   }, [userData])
+
+  // useEffect(() => {
+  //   console.log(transactions)
+  //   // getBalance().then(res=>console.log(res.balances))
+  // }, [transactions])
+  
+
   
   return (
     <UserContext.Provider value={{
@@ -185,9 +226,15 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       logout,
       setLogout,
       toggleLogoutMode,
+      getTransactions,
+      getBalance,
 
       role,
       initialUserWithWalletStatus,
+      transactions,
+      setTransactions,
+      balances,
+      setBalances
     }}>
       {children}
     </UserContext.Provider>

@@ -8,20 +8,23 @@ import  { RiRefreshLine } from 'react-icons/ri';
 import WhiteModal from '@/components/modal/whitemodal';
 import { Dialog } from '@headlessui/react';
 import LogoC from '../../../public/images/logo_c.png';
+import { useUser } from '@/store/user';
+
 type TransactionProps = {
   isTxn: boolean;
   setIsTxn: any;
   children?: any;
 }
 
-const Transaction: NextPageWithLayout<TransactionProps> = ({setIsTxn, isTxn, children}) => {
+const Transaction: NextPageWithLayout<TransactionProps> = ({setIsTxn, isTxn,children}) => {
   const headerText: string = "Recent Transactions";
-  const nextText: string = "Showing 1-6 of 100";
-
+  const nextText: string = "Click to Search";
+  const {transactions} = useUser();
   const [modalOpen, setModalOpen] = useState(false);
   return (
     <>
     <div className="relative w-full mb-6 h-[auto] rounded-xl bg-white shadow-[0px_1px_0px_rgba(0,0,0,0.1)]">
+      {transactions?.length > 0 &&
       <div className="p-4 flex flex-row items-center justify-between">
         <p className=' font-thin text-[#414141]'>{headerText}</p>
         {isTxn ? 
@@ -58,8 +61,9 @@ const Transaction: NextPageWithLayout<TransactionProps> = ({setIsTxn, isTxn, chi
           <p onClick={()=>setIsTxn(!isTxn)} className='font-thin text-[#414141] hidden cursor-pointer  md:block'>{nextText}</p>
         }
       </div>
+       }
       <hr className="h-[2px] w-[100vw] md:hidden"/>
-      <TransactionCard amount='N44,000'/>
+      <TransactionCard />
       <button onClick={()=>setModalOpen(true)} className=" md:hidden fixed bottom-[5vh] right-8 bg-brand_primary_green flex flex-col justify-center items-center w-[35px] h-[35px] rounded-full shadow-xl">
         <RiRefreshLine className="text-white" size={25}/>
       </button>

@@ -216,9 +216,9 @@ export default function HomePage() {
             </Modal>
 
 
-            <footer className='absolute bottom-2 text-gray-700'>
+            <footer className='absolute bottom-2 text-white'>
               © {new Date().getFullYear()} @{' '}
-              <UnderlineLink href='https://github.com/Cowryprotocol'>
+              <UnderlineLink href='https://cowryprotocol.io/'>
                 cowry protocol inc
               </UnderlineLink>
             </footer>
