@@ -41,7 +41,7 @@ const Balanceboard: NextPageWithLayout<BalanceboardProps> = ({children}) => {
               {NGN.length > 0 ? 
               <Text className="font-bold text-xl">{view ? "₦ "+ parseFloat(NGN[0]?.balance).toFixed(2) : "******"}</Text>
               :
-              <Text className="font-bold text-xl">{view ? "₦ "+ 0.00.toFixed(2) : "******"}</Text>
+              <Text className="font-bold text-xl">{view ? "₦ 0.00" : "******"}</Text>
               }
               <Text className="font-thin text-sm text-[#818181]">{balanceText}</Text>
             </div>
