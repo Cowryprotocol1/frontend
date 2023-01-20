@@ -24,8 +24,8 @@ const Balanceboard: NextPageWithLayout<BalanceboardProps> = ({children}) => {
   const NGN = balances?.filter((bal)=> bal.asset_code === "NGN")
   const NGNALLOW = balances?.filter((bal)=> bal.asset_code === "NGNALLOW")
   const NGNLICENSE = balances?.filter((bal)=> bal.asset_code === "NGNLICENSE")
-  const USDC = balances?.filter((bal)=> bal.asset_code === "USDC")
-  const XLM = balances?.filter((bal)=> bal.asset_type === "native")
+  // const USDC = balances?.filter((bal)=> bal.asset_code === "USDC")
+  // const XLM = balances?.filter((bal)=> bal.asset_type === "native")
 
   return (
     <div className="relative w-full md:w-[65%]  h-[auto] mb-6 rounded-xl bg-white shadow-[0px_1px_0px_rgba(0,0,0,0.1)]">
@@ -39,12 +39,9 @@ const Balanceboard: NextPageWithLayout<BalanceboardProps> = ({children}) => {
             </div>
             <div>
               {NGN.length > 0 ? 
-              <Text className="font-bold text-xl">{view ? "₦"+ parseFloat(NGN[0]?.balance).toFixed(2) : "******"}</Text>
+              <Text className="font-bold text-xl">{view ? "₦ "+ parseFloat(NGN[0]?.balance).toFixed(2) : "******"}</Text>
               :
-              USDC.length > 0 ? 
-              <Text className="font-bold text-xl">{view ? "USDC "+parseFloat(USDC[0]?.balance).toFixed(2) : "******"}</Text>
-              : 
-              <Text className="font-bold text-xl">{view ? "XLM "+ parseFloat(XLM[0]?.balance).toFixed(2) : "******"}</Text>
+              <Text className="font-bold text-xl">{view ? "₦ "+ 0.00.toFixed(2) : "******"}</Text>
               }
               <Text className="font-thin text-sm text-[#818181]">{balanceText}</Text>
             </div>
