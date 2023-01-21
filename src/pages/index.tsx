@@ -30,6 +30,7 @@ export default function HomePage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [showFirstModal, setShowFirstModal] = useState(false);
   const [modalList, setModalList] = useState(false);
+  const [error, setError]= useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [close, setClose] = useState("hidden");
 
@@ -68,6 +69,11 @@ export default function HomePage() {
       setWalletAddress(publicKey)
     } catch (e) {
       console.log(e);
+      setError("Oops! an error occured.")
+      setTimeout(() => {
+        setIsLoading(false)
+        setError("")
+      }, 3000);
     }
     
   }
@@ -78,6 +84,11 @@ export default function HomePage() {
       return vendors;
     } catch (e) {
       console.log(e);
+      setError("Oops! an error occured.")
+      setTimeout(() => {
+        setIsLoading(false)
+        setError("")
+      }, 3000);
     }
   }
 
@@ -166,7 +177,7 @@ export default function HomePage() {
               >
                 {modalList ?
                 <div className="w-full flex flex-row ">
-                  {isLoading ? <Text className='font-thin'>Connecting ...</Text> :
+                  {isLoading ? <Text className='font-thin'>{error !== "" ? error: "Connecting ..."}</Text> :
                   <>
                   <Text className='font-thin'>Wallet List</Text>
                   <SlClose size={25} className=" absolute right-4 text-white_day mb-4 cursor-pointer" onClick={handleCloseModal}/>

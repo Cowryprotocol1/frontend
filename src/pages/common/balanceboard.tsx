@@ -1,32 +1,40 @@
 
-import React, {useEffect,useState} from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import Text from '@/components/text';
-import Header from '@/components/layout/Header';
 import Layout from '@/components/layout/Layout';
-import TopBar from '@/components/layout/TopBar';
-import { useRouter } from 'next/router';
 import type { NextPageWithLayout } from "../_app";
 import { useUser } from "../../store/user";
 import {  RiBankFill } from 'react-icons/ri';
 import {  BsFillEyeFill, BsFillEyeSlashFill }  from 'react-icons/bs';
 import BImage from '../../../public/images/balance_image.png';
+import DepositModal from '@/components/balance/depositModal';
+import WithdrawModal from '@/components/balance/withdrawModal';
+
 type BalanceboardProps = {
   children?: any;
 }
 
+export const currencyFormatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'NGN',
+});
+
 const Balanceboard: NextPageWithLayout<BalanceboardProps> = ({children}) => {
   const headerText: string = "Account Balance Details";
   const balanceText: string = "Cowry Balance";
+  const {balances, depositOpen, setDepositOpen, withdrawOpen, setWithdrawOpen} =useUser();
+
   const [view, setView] = useState(true)
 
-  const {balances} =useUser();
+  // const [depositOpen, setDepositOpen] = useState(false);
+  // const [withdrawOpen, setWithdrawOpen] = useState(false);
   const NGN = balances?.filter((bal)=> bal.asset_code === "NGN")
   const NGNALLOW = balances?.filter((bal)=> bal.asset_code === "NGNALLOW")
   const NGNLICENSE = balances?.filter((bal)=> bal.asset_code === "NGNLICENSE")
   // const USDC = balances?.filter((bal)=> bal.asset_code === "USDC")
   // const XLM = balances?.filter((bal)=> bal.asset_type === "native")
-
+  
   return (
     <div className="relative w-full md:w-[65%]  h-[auto] mb-6 rounded-xl bg-white shadow-[0px_1px_0px_rgba(0,0,0,0.1)]">
       <Image src={BImage} alt="bal_image" className="w-[18%] right-0 absolute" />
@@ -39,17 +47,35 @@ const Balanceboard: NextPageWithLayout<BalanceboardProps> = ({children}) => {
             </div>
             <div>
               {NGN.length > 0 ? 
-              <Text className="font-bold text-xl">{view ? "₦ "+ parseFloat(NGN[0]?.balance).toFixed(2) : "******"}</Text>
+              <Text className="font-bold text-xl">{view ? currencyFormatter.format(NGN[0]?.balance) : "******"}</Text>
               :
               <Text className="font-bold text-xl">{view ? "₦ 0.00" : "******"}</Text>
               }
               <Text className="font-thin text-sm text-[#818181]">{balanceText}</Text>
             </div>
           </div>
-          <button className="bg-brand_primary_green rounded-lg h-10 text-white hidden md:flex flex-row justify-between items-center px-8 text-sm">Withdraw</button>
-          <button className="bg-brand_primary_green rounded-lg h-10 text-white hidden md:flex flex-row justify-between items-center px-8 text-sm ">Deposit</button>
+          <button 
+            className="bg-brand_primary_green rounded-lg h-10 text-white hidden md:flex flex-row justify-between items-center px-8 text-sm"
+            onClick={()=>setWithdrawOpen(true)}
+          >Withdraw</button>
+          <button 
+            className="bg-brand_primary_green rounded-lg h-10 text-white hidden md:flex flex-row justify-between items-center px-8 text-sm "
+            onClick={()=>setDepositOpen(true)}
+          >Deposit</button>
         </div>
       </div>
+      <DepositModal 
+        timer={5}
+        isOpen={depositOpen}
+        NGN={NGN}
+        setModalOpen={setDepositOpen}
+      />
+      <WithdrawModal 
+        timer={10}
+        isOpen={withdrawOpen}
+        NGN={NGN}
+        setModalOpen={setWithdrawOpen}
+      />
     </div>
   );
 };

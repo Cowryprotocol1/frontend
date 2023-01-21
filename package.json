@@ -33,6 +33,7 @@
     "react-dom": "^18.2.0",
     "react-icons": "^4.7.1",
     "react-svg": "^15.1.17",
+    "react-tooltip": "^5.5.2",
     "stellar-wallets-kit": "github:Creit-Tech/Stellar-Wallets-Kit",
     "tailwind-merge": "^1.8.1"
   },

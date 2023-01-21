@@ -86,8 +86,8 @@ function Payment() {
         
       </Mainboard>
       <WhiteModal isOpen={modalOpen} setIsOpen={()=>{
-      setModalOpen(true)
-    }}>
+        setModalOpen(true)
+      }}>
       <Dialog.Title
         as="h3"
         className="text-center text-lg font-medium leading-6 md:w-[85%]"

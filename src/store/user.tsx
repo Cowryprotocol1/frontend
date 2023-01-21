@@ -6,6 +6,9 @@ import { redirectUrl } from '@/pages';
 
 const url = `https://cowryprotocol.io`;
 const stellar_url = ` https://horizon-testnet.stellar.org`
+
+
+
 export type UserProp = {
   id: number;
   name: string;
@@ -29,6 +32,8 @@ export type UserContextProps = {
   handleLogin: any;
   getTransactions: any;
   getBalance: any;
+  getDepositIntent: any;
+  getWithdrawalIntent: any;
 
   role: string;
 
@@ -36,6 +41,10 @@ export type UserContextProps = {
   setTransactions: React.Dispatch<React.SetStateAction<any>>;
   setBalances:React.Dispatch<React.SetStateAction<any>>;
   balances: any;
+  depositOpen:any;
+  setDepositOpen:React.Dispatch<React.SetStateAction<boolean>>;
+  withdrawOpen:any;
+  setWithdrawOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const UserContext = createContext<UserContextProps>({
@@ -49,6 +58,7 @@ const UserContext = createContext<UserContextProps>({
   toggleLogoutMode: ()=>null,
   getTransactions: ()=>null,
   getBalance: ()=>null,
+  getWithdrawalIntent:()=>null,
 
   role: "",
 
@@ -58,7 +68,12 @@ const UserContext = createContext<UserContextProps>({
   transactions: null,
   setTransactions: ()=> null,
   balances: null,
-  setBalances: ()=> null
+  setBalances: ()=> null,
+  getDepositIntent: ()=> null,
+  depositOpen: null,
+  setDepositOpen:()=>null,
+  withdrawOpen: null,
+  setWithdrawOpen: ()=>null
 });
 
 
@@ -135,7 +150,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [walletAddress, setWalletAddress] = useState(null);
   const [transactions, setTransactions] = useState([]);
   const [balances, setBalances] = useState([]);
-
+  const [depositOpen, setDepositOpen] = useState(false);
+  const [withdrawOpen, setWithdrawOpen] = useState(false);
 
 
   const toggleLogoutMode = () => {
@@ -147,6 +163,56 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     } 
     return logout;
   
+  };
+
+  const getDepositIntent = async (data: any)=> {
+    let rData = {
+      amount: data.amount,
+      blockchainAddress: data.address,
+      bankType: data.bank,
+      narration: data.description
+    }
+    console.log(JSON.stringify(rData))
+    try {
+      const response = await fetch(`${url}/deposit`, {
+        method: 'POST',
+        headers: {
+          // 'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(rData),
+      })
+      let res = response.json()
+      return res
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const getWithdrawalIntent = async (data: any)=> {
+    let wData = {
+      amount: data.amount,
+      blockchain_address: data.address,
+      bank_name: data.bank,
+      account_number: data.account_number,
+      name_on_acct: data.account_name,
+      phone_number: data.phone,
+      transaction_narration: data.description
+    }
+    console.log(wData)
+    try {
+      const response = await fetch(`${url}/withdrawal`, {
+        method: 'POST',
+        headers: {
+          'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'
+        },
+        body: JSON.stringify(wData),
+      })
+      let res = response.json()
+      return res
+    } catch (error) {
+      throw error;
+    }
   };
   
   const getTransactions = async (address: string, role: string)=> {
@@ -234,7 +300,13 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       transactions,
       setTransactions,
       balances,
-      setBalances
+      setBalances,
+      getDepositIntent,
+      getWithdrawalIntent,
+      depositOpen,
+      setDepositOpen,
+      withdrawOpen,
+      setWithdrawOpen
     }}>
       {children}
     </UserContext.Provider>

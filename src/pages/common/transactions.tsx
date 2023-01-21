@@ -19,7 +19,7 @@ type TransactionProps = {
 const Transaction: NextPageWithLayout<TransactionProps> = ({setIsTxn, isTxn,children}) => {
   const headerText: string = "Recent Transactions";
   const nextText: string = "Click to Search";
-  const {transactions} = useUser();
+  const {transactions, depositOpen, setDepositOpen, withdrawOpen, setWithdrawOpen} =useUser();
   const [modalOpen, setModalOpen] = useState(false);
   return (
     <>
@@ -87,10 +87,22 @@ const Transaction: NextPageWithLayout<TransactionProps> = ({setIsTxn, isTxn,chil
       </Dialog.Title>
 
       <div className="flex flex-row justify-evenly items-center my-4 w-[100%]">
-        <button className=" font-thin hover:bg-brand_tertiary_grey bg-brand_primary_green text-white_day py-2 px-8 rounded-sm" onClick={() => setModalOpen(false)}>
+        <button 
+          className=" font-thin hover:bg-brand_tertiary_grey bg-brand_primary_green text-white_day py-2 px-8 rounded-sm"
+          onClick={()=>{
+            setWithdrawOpen(true)
+            setModalOpen(false)
+          }}
+          >
           Withdraw
         </button>
-        <button className=" font-thin hover:bg-brand_tertiary_grey bg-brand_primary_green text-white_day py-2 px-8 rounded-sm" onClick={() => setModalOpen(false)}>
+        <button 
+          className=" font-thin hover:bg-brand_tertiary_grey bg-brand_primary_green text-white_day py-2 px-8 rounded-sm" 
+          onClick={()=>{
+            setDepositOpen(true)
+            setModalOpen(false)
+          }}
+          >
           Deposit
         </button>
 
