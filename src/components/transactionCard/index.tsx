@@ -27,6 +27,7 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
         setModalOpen(true)
     }
     useEffect(() => {
+        console.log(transactions, "teds")
         setTxns(transactions.reverse())
     }, [])
     
