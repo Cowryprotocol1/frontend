@@ -31,31 +31,14 @@ const WithdrawModal: NextPageWithLayout<WithdrawModalProps> = ({
   NGN,
   setModalOpen
 }) => {
-  const {walletAddress, getWithdrawalIntent} =useUser();
+  const {walletAddress, getWithdrawalIntent, role, getTransactions, setTransactions} =useUser();
   const [isExpired, setIsExpired] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
   const [next, setNext] = useState(1);
   const [withdrawData, setWithdrawData] = useState(null)
   const [paymentMsg, setPaymentMsg] = useState("")
-  // const [withdrawData, setWithdrawData] = useState({
-  //   message: "Please send Token to the address below, kindly note to add a transaction fee of 200 NGN to your transaction, \nOnce transaction is send to the below address, your account will be credited. Thank You",
-  //   blockchain_address: "GD5AVQJP2P3WQADE5GDTENJMO5YKBPA23AUBO6MXTE26NSV3N43IXTZ6",
-  //   deposit_asset_code: "NGN",
-  //   deposit_asset_issuer: "GD5AVQJP2P3WQADE5GDTENJMO5YKBPA23AUBO6MXTE26NSV3N43IXTZ6",
-  //   memo: "20091202721",
-  //   user_details: {
-  //       bank_name: "FBN",
-  //       account_number: 9078568456,
-  //       name_on_acct: "test man",
-  //       phone_number: "09067589358",
-  //       blockchain_address: "GA7TCONR42XF77DDBKBMT2LKQGLS6GK2ZGUQFWHQA7IZLS4LVC6YVKTF",
-  //       transaction_narration: "withdraw test 100",
-  //       amount: 5000,
-  //       expected_amount_with_fee: 5200,
-  //       eta: "10min"
-  //   }
-  // });
+
   const [form, setForm] = useState({
     address: walletAddress,
     amount:'',
@@ -130,6 +113,10 @@ const handleCloseModal = ()=>{
   setModalOpen(false)
   setError("")
   setIsLoading(false)
+  let d = getTransactions(walletAddress , role)
+  d.then((res:any)=>{  
+    setTransactions(res.all_transactions.reverse())
+  })
 }
 
 useEffect(() => {
@@ -143,6 +130,28 @@ const handleTooltip = (id:string)=>{
   setCopyData({
     ...copyData,
     [id]: "Copied!"
+  })
+}
+
+const handleConfirmation=()=>{
+  setPaymentMsg("Withdrawal will be process shortly!")
+}
+const handleWithdrawIntent =()=>{
+  let g = getWithdrawalIntent(form)
+  g.then(res=>{
+    setIsLoading(false)
+    if (res?.error){
+      if (typeof res?.error === "string") {
+        setError("Oops! something went wrong")
+        console.log(res)
+      }
+    }
+    else{
+      console.log(res)
+      setWithdrawData(res)
+      setNext(3)
+      setPaymentMsg(res?.message)
+    }
   })
 }
 
@@ -237,24 +246,7 @@ const handleTooltip = (id:string)=>{
           if (next === 1){
             setNext(2)
           }
-          else if (next === 2) {
-            let g = getWithdrawalIntent(form)
-            g.then(res=>{
-              setIsLoading(false)
-              if (res?.error){
-                if (typeof res?.error === "string") {
-                  setError("Oops! something went wrong")
-                  console.log(res)
-                }
-              }
-              else{
-                console.log(res)
-                setWithdrawData(res)
-                setNext(3)
-                setPaymentMsg(res?.message)
-              }
-            })
-          }
+          else if (next === 2) {handleWithdrawIntent()}
         }}
         >
           {next === 1 && "Withdraw"}
@@ -271,6 +263,9 @@ const handleTooltip = (id:string)=>{
         <>
         <p className="text-xs my-2 bg-[#E4F8EC] text-[#818181] p-2 rounded">{paymentMsg !== "" && paymentMsg}</p>
         <div className="border-[1px] border-[#F2F2F2] rounded-xl w-full p-4">
+        {paymentMsg === "" &&
+            <p className="text-xs my-2 bg-[#E4F8EC] text-[#818181] p-2 rounded">{withdrawData?.message}</p>
+          }
           <div className="flex flex-col justify-center items-center my-1">
             <p className=" text-xs font-thin text-[#414141]">Transaction Amount</p>
             <p className=" text-lg font-medium">{currencyFormatter.format((withdrawData?.user_details?.amount))}</p>
@@ -332,6 +327,7 @@ const handleTooltip = (id:string)=>{
           {isExpired ? 
           <p className="font-thin text-xs text-red-400">Oops! You have to try again</p>
           :
+          paymentMsg !== "Withdrawal will be process shortly!" &&
           <>
             <button 
               className="border-brand_primary_green border mt-2 mr-2 rounded px-4 py-2 text-xs text-brand_primary_green"
@@ -341,17 +337,19 @@ const handleTooltip = (id:string)=>{
             </button>
             <button 
               className="bg-brand_primary_green mt-2 ml-2 rounded px-4 py-2 text-xs text-white"
-              onClick={()=>null}
+              onClick={handleConfirmation}
             >
               Payment Made
             </button>
           </>
           }
         </div>
-        <div className="flex flex-col justify-center items-center mt-2">
+          {paymentMsg !== "Withdrawal will be process shortly!" &&
+          <div className="flex flex-col justify-center items-center mt-2">
             <CountdownTimer  timer={timer} setIsExpired={setIsExpired}/>
             <p className="font-thin text-[9px] text-[#818181]">Transaction ETA</p>
           </div>
+          }
         </>
       }
 

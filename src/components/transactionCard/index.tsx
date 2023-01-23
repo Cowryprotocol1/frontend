@@ -14,8 +14,6 @@ type TransactionCardProps = {
 }
 
 const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) => {
-  const headerText: string = "Transaction Overview";
-  const balanceText: string = "147";
   const [modalData, setModalData] = useState([])
   const [modalOpen, setModalOpen] = useState(false);
   const [user, setUser] = useState(false);

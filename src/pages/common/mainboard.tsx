@@ -39,7 +39,10 @@ const Mainboard: NextPageWithLayout<MainboardProps> = ({title, children}) => {
     g.then((res:any)=>{  
       setBalances(res.balances)
     })
-  }, [walletAddress, role])
+  }, [])
+
+
+  
   
 
   return (

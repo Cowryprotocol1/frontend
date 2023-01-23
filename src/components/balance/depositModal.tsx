@@ -36,25 +36,13 @@ const DepositModal: NextPageWithLayout<DepositModalProps> = ({
   const [depositData, setDepositData] = useState(null)
   
   const [paymentMsg, setPaymentMsg] = useState("")
-  // const [depositData, setDepositData] = useState({
-  //   message: "Send funds to account below with the following details, the correct amount to send is 100200.0, please include your narration when making deposit in from your bank account",
-  //   memo: "4b86d2fdd6fb0da7e681",
-  //   amount: 100000,
-  //   fee: "200",
-  //   amount_to_pay: 100200,
-  //   narration: "Test IFP first auth testt",
-  //   bank_name: "TestBank 2nd",
-  //   account_number: "2222222222",
-  //   phoneNumber: "2222222222",
-  //   eta: "5 minutes"
-  // });
   const [form, setForm] = useState({
     address: '',
     amount:'',
     bank:'',
     description:''
   });
-  const {walletAddress, getDepositIntent, postPaymentConfirmation} =useUser();
+  const {walletAddress, role, getDepositIntent, postPaymentConfirmation, getTransactions, setTransactions} =useUser();
   const [copyData, setCopyData] = useState({
     account_number: 'Copy',
   });
@@ -151,6 +139,10 @@ const handleCloseModal = ()=>{
   setModalOpen(false)
   setError("")
   setIsLoading(false)
+  let d = getTransactions(walletAddress , role)
+  d.then((res:any)=>{  
+    setTransactions(res.all_transactions.reverse())
+  })
 }
 useEffect(() => {
   setForm({
