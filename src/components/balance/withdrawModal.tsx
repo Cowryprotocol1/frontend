@@ -33,25 +33,29 @@ const WithdrawModal: NextPageWithLayout<WithdrawModalProps> = ({
 }) => {
   const {walletAddress, getWithdrawalIntent} =useUser();
   const [isExpired, setIsExpired] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState("")
   const [next, setNext] = useState(1);
-  const [withdrawData, setWithdrawData] = useState({
-    message: "Please send Token to the address below, kindly note to add a transaction fee of 200 NGN to your transaction, \nOnce transaction is send to the below address, your account will be credited. Thank You",
-    blockchain_address: "GD5AVQJP2P3WQADE5GDTENJMO5YKBPA23AUBO6MXTE26NSV3N43IXTZ6",
-    deposit_asset_code: "NGN",
-    deposit_asset_issuer: "GD5AVQJP2P3WQADE5GDTENJMO5YKBPA23AUBO6MXTE26NSV3N43IXTZ6",
-    memo: "20091202721",
-    user_details: {
-        bank_name: "FBN",
-        account_number: 9078568456,
-        name_on_acct: "test man",
-        phone_number: "09067589358",
-        blockchain_address: "GA7TCONR42XF77DDBKBMT2LKQGLS6GK2ZGUQFWHQA7IZLS4LVC6YVKTF",
-        transaction_narration: "withdraw test 100",
-        amount: 5000,
-        expected_amount_with_fee: 5200,
-        eta: "10min"
-    }
-  });
+  const [withdrawData, setWithdrawData] = useState(null)
+  const [paymentMsg, setPaymentMsg] = useState("")
+  // const [withdrawData, setWithdrawData] = useState({
+  //   message: "Please send Token to the address below, kindly note to add a transaction fee of 200 NGN to your transaction, \nOnce transaction is send to the below address, your account will be credited. Thank You",
+  //   blockchain_address: "GD5AVQJP2P3WQADE5GDTENJMO5YKBPA23AUBO6MXTE26NSV3N43IXTZ6",
+  //   deposit_asset_code: "NGN",
+  //   deposit_asset_issuer: "GD5AVQJP2P3WQADE5GDTENJMO5YKBPA23AUBO6MXTE26NSV3N43IXTZ6",
+  //   memo: "20091202721",
+  //   user_details: {
+  //       bank_name: "FBN",
+  //       account_number: 9078568456,
+  //       name_on_acct: "test man",
+  //       phone_number: "09067589358",
+  //       blockchain_address: "GA7TCONR42XF77DDBKBMT2LKQGLS6GK2ZGUQFWHQA7IZLS4LVC6YVKTF",
+  //       transaction_narration: "withdraw test 100",
+  //       amount: 5000,
+  //       expected_amount_with_fee: 5200,
+  //       eta: "10min"
+  //   }
+  // });
   const [form, setForm] = useState({
     address: walletAddress,
     amount:'',
@@ -124,6 +128,8 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement> | any)=>{
 const handleCloseModal = ()=>{
   setNext(1)
   setModalOpen(false)
+  setError("")
+  setIsLoading(false)
 }
 
 useEffect(() => {
@@ -169,17 +175,18 @@ const handleTooltip = (id:string)=>{
           />
         </div>
       </Dialog.Title>
-     
+      {error !== "" && <p className="text-xs rounded  my-2 p-1 text-center bg-[#FBE1E1] text-[#E50808]">{error}</p>}
       <div className="flex flex-col items-center gap-4 mt-4  w-[100%]">
         { next ===  1 && mappable.map(({type, placeholder,name, value, id})=>{
           return (
-            <div className="w-[100%] relative ">
+            <div key={id} className="w-[100%] relative ">
             <input
               key={id} 
               type={type} 
               name={name}
               placeholder={placeholder}
               value={value}
+              maxLength={name === "account_number" ? 10 : 100}
               onChange={handleChange}
               className={`bg-transparent border-1 h-[45px] ${name ==="amount" && parseFloat(NGN[0]?.balance) < parseFloat(form.amount)? "focus:border-[#E50808] border-[#E50808]" : "border-[#EDEDED]"} text-black w-full md:w-[85%] text-xs  font-thin rounded`}
             />
@@ -224,8 +231,8 @@ const handleTooltip = (id:string)=>{
       {next !== 3 &&
         <>
         <button 
-        className={`${parseFloat(NGN[0]?.balance) < parseFloat(form.amount)? "bg-gray-300 text-black" :"bg-brand_primary_green mt-4 text-white"} rounded px-4 py-2 text-xs`}
-        disabled={parseFloat(NGN[0]?.balance) < parseFloat(form.amount)? true: false}
+        className={`${parseFloat(NGN[0]?.balance) < parseFloat(form.amount) || form.bank === '' || form.account_name === '' || form.account_number === '' || form.account_number.length < 10 || form.phone === '' || form.description === '' ? "bg-gray-300 text-black" :"bg-brand_primary_green mt-4 text-white"} rounded px-4 py-2 text-xs`}
+        disabled={parseFloat(NGN[0]?.balance) < parseFloat(form.amount) || form.bank === '' || form.account_name === '' || form.account_number === '' || form.account_number.length < 10 || form.phone === '' || form.description === '' ? true: false}
         onClick={()=>{
           if (next === 1){
             setNext(2)
@@ -233,21 +240,26 @@ const handleTooltip = (id:string)=>{
           else if (next === 2) {
             let g = getWithdrawalIntent(form)
             g.then(res=>{
+              setIsLoading(false)
               if (res?.error){
-                console.log(res?.error)
-                // setNext(3)
+                if (typeof res?.error === "string") {
+                  setError("Oops! something went wrong")
+                  console.log(res)
+                }
               }
               else{
                 console.log(res)
-                // setWithdrawData(res?.data[0])
+                setWithdrawData(res)
                 setNext(3)
+                setPaymentMsg(res?.message)
               }
             })
           }
         }}
         >
           {next === 1 && "Withdraw"}
-          {next === 2 && "Confirm Withdrawal"}
+          {next === 2 && !isLoading && "Confirm Withdrawal"}
+          {next === 2 && isLoading && "Confirming..."}
         </button>
         {parseFloat(NGN[0]?.balance) >= parseFloat(form.amount) &&
         <p className="font-thin text-xs text-[#818181]">You will receive <span className="text-brand_primary_green">{currencyFormatter.format(parseFloat(form.amount))}</span> into your fiat account </p>
@@ -257,6 +269,7 @@ const handleTooltip = (id:string)=>{
 
       {next == 3 && 
         <>
+        <p className="text-xs my-2 bg-[#E4F8EC] text-[#818181] p-2 rounded">{paymentMsg !== "" && paymentMsg}</p>
         <div className="border-[1px] border-[#F2F2F2] rounded-xl w-full p-4">
           <div className="flex flex-col justify-center items-center my-1">
             <p className=" text-xs font-thin text-[#414141]">Transaction Amount</p>
@@ -266,13 +279,13 @@ const handleTooltip = (id:string)=>{
           <div className="flex flex-row justify-between items-center my-2">
             <p className=" text-xs font-thin text-[#414141]">Staking Address</p>
             <p className=" text-xs font-medium flex flex-row items-center">
-              <FiCopy id="blockchain_address" data-tooltip-content={copyData.blockchain_address} 
+              <FiCopy id="blockchain_address" data-tooltip-content={copyData?.blockchain_address} 
                 onClick={()=>{
-                  copyToClipboard(withdrawData.blockchain_address)
+                  copyToClipboard(withdrawData?.blockchain_address)
                   handleTooltip("blockchain_address")
                 }} 
                 className="mr-1"/>
-              {withdrawData.blockchain_address.substring(0, 5)}...{withdrawData.blockchain_address.substring(withdrawData.blockchain_address.length - 4)}
+              {withdrawData?.blockchain_address?.substring(0, 5)}...{withdrawData?.blockchain_address?.substring(withdrawData?.blockchain_address?.length - 4)}
             </p>
             <ReactTooltip anchorId="blockchain_address" />
             
@@ -280,38 +293,38 @@ const handleTooltip = (id:string)=>{
           <div className="flex flex-row justify-between items-center my-2">
             <p className=" text-xs font-thin text-[#414141]">Asset Details (Issuer)</p>
             <p className=" text-xs font-medium flex flex-row items-center">
-              <FiCopy id="deposit_asset_issuer" data-tooltip-content={copyData.deposit_asset_issuer} className="mr-1" 
+              <FiCopy id="deposit_asset_issuer" data-tooltip-content={copyData?.deposit_asset_issuer} className="mr-1" 
                 onClick={()=>{
-                  copyToClipboard(withdrawData.deposit_asset_issuer)
+                  copyToClipboard(withdrawData?.deposit_asset_issuer)
                   handleTooltip("deposit_asset_issuer")
                 }}
               />
-              {withdrawData.deposit_asset_issuer.substring(0, 5)}...{withdrawData.deposit_asset_issuer.substring(withdrawData.deposit_asset_issuer.length - 4)}
+              {withdrawData?.deposit_asset_issuer?.substring(0, 5)}...{withdrawData?.deposit_asset_issuer?.substring(withdrawData?.deposit_asset_issuer?.length - 4)}
             </p>
             <ReactTooltip anchorId="deposit_asset_issuer" />
           </div>
           <div className="flex flex-row justify-between items-center my-2">
             <p className=" text-xs font-thin text-[#414141]">Asset Code</p>
             <p className=" text-xs font-medium flex flex-row items-center"> 
-              {withdrawData.deposit_asset_code}
+              {withdrawData?.deposit_asset_code}
             </p>
           </div>
           <div className="flex flex-row justify-between items-center my-2">
             <p className=" text-xs font-thin text-[#414141]">Memo</p>
             <p className=" text-xs font-medium flex flex-row items-center"> 
-              <FiCopy id="memo" data-tooltip-content={copyData.memo} className="mr-1" 
+              <FiCopy id="memo" data-tooltip-content={copyData?.memo} className="mr-1" 
                 onClick={()=>{
-                  copyToClipboard(withdrawData.memo)
+                  copyToClipboard(withdrawData?.memo)
                   handleTooltip("memo")
                 }}
               />
-              {withdrawData.memo}
+              {withdrawData?.memo}
             </p>
             <ReactTooltip anchorId="memo" />
           </div>
           <div className="flex flex-row justify-between items-center my-2">
             <p className=" text-xs font-thin text-[#414141]">Depositing Address</p>
-            <p className=" text-xs font-medium ">{withdrawData.user_details.blockchain_address.substring(0, 5)}...{withdrawData.user_details.blockchain_address.substring(withdrawData.user_details.blockchain_address.length - 4)}</p>
+            <p className=" text-xs font-medium ">{withdrawData?.user_details?.blockchain_address?.substring(0, 5)}...{withdrawData?.user_details?.blockchain_address.substring(withdrawData?.user_details?.blockchain_address?.length - 4)}</p>
             
           </div>
         </div>

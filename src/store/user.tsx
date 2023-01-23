@@ -207,7 +207,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
   const getWithdrawalIntent = async (data: any)=> {
     let wData = {
-      amount: data.amount,
+      amount: parseFloat(data.amount),
       blockchain_address: data.address,
       bank_name: data.bank,
       account_number: data.account_number,
@@ -220,7 +220,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       const response = await fetch(`${url}/withdrawal`, {
         method: 'POST',
         headers: {
-          'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(wData),
       })

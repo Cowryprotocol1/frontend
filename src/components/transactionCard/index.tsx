@@ -20,7 +20,7 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
   const [modalOpen, setModalOpen] = useState(false);
   const [user, setUser] = useState(false);
   const {transactions} = useUser();
-  console.log(transactions, "trans")
+//   console.log(transactions, "trans")
     const handleTxnModal = (id:any)=>{
         const txn = transactions.filter((txn:any)=>txn.id === id)
         setModalData(txn)
