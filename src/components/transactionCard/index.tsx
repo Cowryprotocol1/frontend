@@ -19,13 +19,17 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
   const [modalData, setModalData] = useState([])
   const [modalOpen, setModalOpen] = useState(false);
   const [user, setUser] = useState(false);
+  const [txns, setTxns] = useState([])
   const {transactions} = useUser();
-//   console.log(transactions, "trans")
     const handleTxnModal = (id:any)=>{
         const txn = transactions.filter((txn:any)=>txn.id === id)
         setModalData(txn)
         setModalOpen(true)
     }
+    useEffect(() => {
+        setTxns(transactions.reverse())
+    }, [])
+    
   return (
     <div className="md:container md:mx-auto pb-4 overflow-auto h-[40vh]">
         {transactions?.length > 0 ? 
@@ -41,7 +45,7 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
             </tr>
             </thead>
             <tbody>
-                {transactions?.map(({id, transaction_amount, transaction_narration, transaction_status, transaction_type})=>{
+                {txns.reverse()?.map(({id, transaction_amount, transaction_narration, transaction_status, transaction_type})=>{
                     return (
                         <tr className="text-xs cursor-pointer" key={id} onClick={()=>handleTxnModal(id)}>
                             <td className="px-4 py-2 font-thin text-[#818181]">{id}</td>
@@ -83,7 +87,7 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
         }
         {/* mobile table */}
         <div className='w-full px-4 md:hidden overflow-auto h-[45vh]'>
-            {transactions?.map(({id, transaction_amount, transaction_narration, transaction_status, transaction_type})=>{
+            {txns?.map(({id, transaction_amount, transaction_narration, transaction_status, transaction_type})=>{
                 return (
                     <div key={id} onClick={()=>handleTxnModal(id)} className="cursor-pointer my-2">
                     <div className='flex flex-row justify-between items-center '>

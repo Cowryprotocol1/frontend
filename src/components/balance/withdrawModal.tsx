@@ -235,7 +235,7 @@ const handleTooltip = (id:string)=>{
             g.then(res=>{
               if (res?.error){
                 console.log(res?.error)
-                setNext(3)
+                // setNext(3)
               }
               else{
                 console.log(res)

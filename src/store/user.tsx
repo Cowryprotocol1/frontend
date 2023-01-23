@@ -34,7 +34,7 @@ export type UserContextProps = {
   getBalance: any;
   getDepositIntent: any;
   getWithdrawalIntent: any;
-
+  postPaymentConfirmation: any;
   role: string;
 
   transactions: any; 
@@ -73,7 +73,8 @@ const UserContext = createContext<UserContextProps>({
   depositOpen: null,
   setDepositOpen:()=>null,
   withdrawOpen: null,
-  setWithdrawOpen: ()=>null
+  setWithdrawOpen: ()=>null,
+  postPaymentConfirmation:()=>null,
 });
 
 
@@ -167,20 +168,35 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
   const getDepositIntent = async (data: any)=> {
     let rData = {
-      amount: data.amount,
+      amount: parseFloat(data.amount),
       blockchainAddress: data.address,
       bankType: data.bank,
       narration: data.description
     }
-    console.log(JSON.stringify(rData))
+    // console.log(JSON.stringify(rData))
     try {
       const response = await fetch(`${url}/deposit`, {
         method: 'POST',
         headers: {
-          // 'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(rData),
+      })
+      let res = response.json()
+      return res
+    } catch (error) {
+      throw error;
+    }
+  };
+  const postPaymentConfirmation = async (data: any)=> {
+    // console.log(JSON.stringify(data))
+    try {
+      const response = await fetch(`${url}/deposit`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
       })
       let res = response.json()
       return res
@@ -306,7 +322,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       depositOpen,
       setDepositOpen,
       withdrawOpen,
-      setWithdrawOpen
+      setWithdrawOpen,
+      postPaymentConfirmation
     }}>
       {children}
     </UserContext.Provider>
