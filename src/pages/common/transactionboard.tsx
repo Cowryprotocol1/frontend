@@ -21,7 +21,7 @@ const Transactionboard: NextPageWithLayout<TransactionboardProps> = ({children})
   const headerText: string = "Transaction Overview";
   const {transactions} = useUser();
   const total: number = transactions?.filter((txn)=> txn).length
-  console.log(transactions)
+  // console.log(transactions)
   
   return (
     <div className="w-full md:w-[30%] mb-6 h-[auto] rounded-xl bg-white shadow-[0px_1px_0px_rgba(0,0,0,0.1)]">

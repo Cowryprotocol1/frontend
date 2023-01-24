@@ -9,9 +9,10 @@ type HeaderButtonProps = {
   activeText: string;
   inactiveBg: string;
   onClick?: any;
+  setConversionOpen?: any;
 }
 
-const HeaderButton: React.FC<HeaderButtonProps> = ({ href, text, activeBg, activeText, inactiveBg, onClick }) => {
+const HeaderButton: React.FC<HeaderButtonProps> = ({ href, text, activeBg, activeText, inactiveBg, onClick, setConversionOpen }) => {
   const { pathname, push } = useRouter();
   
   const handleLink = (link: string) => {
@@ -23,7 +24,11 @@ const HeaderButton: React.FC<HeaderButtonProps> = ({ href, text, activeBg, activ
   `${inactiveBg} rounded-l-lg w-full h-12 text-white flex flex-row items-center pl-8 my-3 text-sm`;
 
   return (
-    <button onClick={()=>{text === "Logout" ? onClick(): handleLink(href)}}  className={classname}
+    <button 
+      onClick={()=>{
+        text === "Logout" ? onClick(): text === "Become an IFP" ? setConversionOpen(true): handleLink(href)
+    }}  
+      className={classname}
     >
       {text === "Dashboard" && <RxDashboard  size={25} className="mr-4"/>}
       {text === "Payment" && <RiBankFill  size={25} className="mr-4"/>}

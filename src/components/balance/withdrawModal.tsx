@@ -131,6 +131,12 @@ const handleTooltip = (id:string)=>{
     ...copyData,
     [id]: "Copied!"
   })
+  setTimeout(() => {
+    setCopyData({
+      ...copyData,
+      [id]: "Copy!"
+    })
+  }, 2000);
 }
 
 const handleConfirmation=()=>{

@@ -8,6 +8,8 @@ import Avatar from '../icons/avatar';
 import Text from '../text';
 import PassBg from '../../../public/images/pass_back.png'
 import { useUser } from '@/store/user';
+import ConversionModal from './conversionModal';
+
 type MobileHeaderProps = {
   alt: string;
   image: string;
@@ -26,22 +28,33 @@ export default function MobileHeader({ alt, image, route, handleLogOut, walletAd
   const toggleModal = () => { 
     setIsOpen(!isOpen); 
   }
-  const { userData } = useUser();
+  const { userData, role, conversionOpen, setConversionOpen } = useUser();
   useEffect(() => {
     if (userData && typeof userData === 'object') {
       if (userData) {
-        if (userData.role === "user"){
-          setLabel("Become an IFP")
-          setLabelRoute("join_ifp")
+        // if (userData.role === "user"){
+        //   setLabel("Become an IFP")
+        //   setLabelRoute("join_ifp")
       
-        } else if (userData.role === "ifp"){
-          setLabel("Top up")
-          setLabelRoute("top_up")
-        }
+        // } else if (userData.role === "ifp"){
+        //   setLabel("Top up")
+        //   setLabelRoute("top_up")
+        // }
       }
     }
-  })
+    if (role !== null) {
+      if (role === "user"){
+        setLabel("Become an IFP")
+        setLabelRoute("join_ifp")
+    
+      } else if (role === "ifp"){
+        setLabel("Top up")
+        setLabelRoute("top_up")
+      }
+    }
+  }, [userData, role])
 
+console.log(label)
   const links = [
     { id: 1, href: `/${route}/dashboard`, label: 'Dashboard' },
     { id: 2, href: `/${route}/payment`, label: 'Payment'},
@@ -79,6 +92,7 @@ export default function MobileHeader({ alt, image, route, handleLogOut, walletAd
         <ul className='flex items-center flex-col justify-center'>
           {links.map(({ id, href, label }) => (
             <HeaderButton 
+            setConversionOpen={setConversionOpen}
             key={id}
               href={href} 
               text={label} 

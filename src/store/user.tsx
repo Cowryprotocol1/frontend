@@ -34,6 +34,7 @@ export type UserContextProps = {
   getBalance: any;
   getDepositIntent: any;
   getWithdrawalIntent: any;
+  onboardIFP:any;
   postPaymentConfirmation: any;
   role: string;
 
@@ -45,6 +46,8 @@ export type UserContextProps = {
   setDepositOpen:React.Dispatch<React.SetStateAction<boolean>>;
   withdrawOpen:any;
   setWithdrawOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  conversionOpen:any;
+  setConversionOpen:React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const UserContext = createContext<UserContextProps>({
@@ -59,7 +62,7 @@ const UserContext = createContext<UserContextProps>({
   getTransactions: ()=>null,
   getBalance: ()=>null,
   getWithdrawalIntent:()=>null,
-
+  onboardIFP:()=>null,
   role: "",
 
   walletAddress: "",
@@ -75,6 +78,8 @@ const UserContext = createContext<UserContextProps>({
   withdrawOpen: null,
   setWithdrawOpen: ()=>null,
   postPaymentConfirmation:()=>null,
+  conversionOpen:null,
+  setConversionOpen: ()=>null
 });
 
 
@@ -153,7 +158,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [balances, setBalances] = useState([]);
   const [depositOpen, setDepositOpen] = useState(false);
   const [withdrawOpen, setWithdrawOpen] = useState(false);
-
+  const [conversionOpen, setConversionOpen] = useState(false)
 
   const toggleLogoutMode = () => {
     if (logout !== null) {
@@ -204,6 +209,30 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       throw error;
     }
   };
+  
+  const onboardIFP = async (data: any)=> {
+    let wData = {
+      blockchainAddress: walletAddress,
+      bankName: data.bank_name,
+      bankAccount: data.account_number,
+      email: data.email,
+      phoneNumber: data.phone,
+    }
+    // console.log(wData)
+    try {
+      const response = await fetch(`${url}/onboard`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(wData),
+      })
+      let res = response.json()
+      return res
+    } catch (error) {
+      throw error;
+    }
+  };
 
   const getWithdrawalIntent = async (data: any)=> {
     let wData = {
@@ -215,7 +244,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       phone_number: data.phone,
       transaction_narration: data.description
     }
-    console.log(wData)
+    // console.log(wData)
     try {
       const response = await fetch(`${url}/withdrawal`, {
         method: 'POST',
@@ -250,28 +279,11 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const getAccount = async (x)=> {
+  const getAccount = async ()=> {
     try {
       const response = await fetch(`${url}/accounts?account_id=${walletAddress}`)
-      if (response.status === 200) {
-        const json = await response.json();
-        if (json.error) {
-            throw new Error(json.error);
-        }
-        if (x == null) {
-          localStorage.setItem("userType", "user") 
-        }
-        setRole("ifp")
-        window.location.href = "/ifps/dashboard";
-        return json;
-      }
-      else if (response.status === 404) {
-        if (x == null) {
-          localStorage.setItem("userType", "user") 
-        }
-        setRole("user")  
-        window.location.href = "/users/dashboard";
-      }
+      let res = response.json()
+      return res
       
     } catch (error) {
       throw error;
@@ -284,16 +296,43 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   if ( walletAdd === null && walletAddress !== null) {
     localStorage.setItem("walletAddress", walletAddress)
   }
-    getAccount(x)
+    getAccount().then(response=>{
+      if (response.status === "successful") {
+        if (x == null) {
+          localStorage.setItem("userType", "ifp") 
+        }
+        setRole("ifp")
+        window.location.href = "/ifps/dashboard";
+        return response;
+      }
+      else  {
+        console.log(response, "rsdecs")
+        if (x == null) {
+          localStorage.setItem("userType", "user") 
+        }
+        setRole("user")  
+        window.location.href = "/users/dashboard";
+      }
+    })
   };
+  // getAccount("user")
   useEffect(() => {
     initialUserWithWalletStatus
   }, [userData])
 
-  // useEffect(() => {
-  //   console.log(transactions)
-  //   // getBalance().then(res=>console.log(res.balances))
-  // }, [transactions])
+  useEffect(() => {
+    let x = localStorage.getItem("userType") 
+    getAccount().then(response=>{
+      if (response.status === "successful") {
+        if (x !== null && x === "user") {
+          localStorage.setItem("userType", "ifp") 
+          console.log("You are now an IFP")
+          setRole("ifp")
+          window.location.href = "/ifps/dashboard";
+        }
+      }
+    })
+  }, [])
   
 
   
@@ -310,6 +349,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       toggleLogoutMode,
       getTransactions,
       getBalance,
+      onboardIFP,
 
       role,
       initialUserWithWalletStatus,
@@ -323,7 +363,9 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       setDepositOpen,
       withdrawOpen,
       setWithdrawOpen,
-      postPaymentConfirmation
+      postPaymentConfirmation,
+      conversionOpen,
+      setConversionOpen
     }}>
       {children}
     </UserContext.Provider>
