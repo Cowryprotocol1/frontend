@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
-<url><loc>https://tsnext-tw.thcl.dev</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2023-01-23T23:14:46.872Z</lastmod></url>
-<url><loc>https://tsnext-tw.thcl.dev/common/balanceboard</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2023-01-23T23:14:46.872Z</lastmod></url>
-<url><loc>https://tsnext-tw.thcl.dev/common/mainboard</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2023-01-23T23:14:46.872Z</lastmod></url>
-<url><loc>https://tsnext-tw.thcl.dev/common/transactionboard</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2023-01-23T23:14:46.872Z</lastmod></url>
-<url><loc>https://tsnext-tw.thcl.dev/common/transactions</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2023-01-23T23:14:46.872Z</lastmod></url>
-<url><loc>https://tsnext-tw.thcl.dev/components</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2023-01-23T23:14:46.872Z</lastmod></url>
-<url><loc>https://tsnext-tw.thcl.dev/ifps/dashboard</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2023-01-23T23:14:46.872Z</lastmod></url>
-<url><loc>https://tsnext-tw.thcl.dev/ifps/payment</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2023-01-23T23:14:46.872Z</lastmod></url>
-<url><loc>https://tsnext-tw.thcl.dev/ifps/settings</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2023-01-23T23:14:46.872Z</lastmod></url>
-<url><loc>https://tsnext-tw.thcl.dev/users/dashboard</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2023-01-23T23:14:46.872Z</lastmod></url>
-<url><loc>https://tsnext-tw.thcl.dev/users/payment</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2023-01-23T23:14:46.872Z</lastmod></url>
-<url><loc>https://tsnext-tw.thcl.dev/users/settings</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2023-01-23T23:14:46.872Z</lastmod></url>
+<url><loc>https://tsnext-tw.thcl.dev</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2023-01-24T00:59:46.907Z</lastmod></url>
+<url><loc>https://tsnext-tw.thcl.dev/common/balanceboard</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2023-01-24T00:59:46.907Z</lastmod></url>
+<url><loc>https://tsnext-tw.thcl.dev/common/mainboard</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2023-01-24T00:59:46.907Z</lastmod></url>
+<url><loc>https://tsnext-tw.thcl.dev/common/transactionboard</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2023-01-24T00:59:46.907Z</lastmod></url>
+<url><loc>https://tsnext-tw.thcl.dev/common/transactions</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2023-01-24T00:59:46.907Z</lastmod></url>
+<url><loc>https://tsnext-tw.thcl.dev/components</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2023-01-24T00:59:46.907Z</lastmod></url>
+<url><loc>https://tsnext-tw.thcl.dev/ifps/dashboard</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2023-01-24T00:59:46.907Z</lastmod></url>
+<url><loc>https://tsnext-tw.thcl.dev/ifps/payment</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2023-01-24T00:59:46.907Z</lastmod></url>
+<url><loc>https://tsnext-tw.thcl.dev/ifps/settings</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2023-01-24T00:59:46.907Z</lastmod></url>
+<url><loc>https://tsnext-tw.thcl.dev/users/dashboard</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2023-01-24T00:59:46.907Z</lastmod></url>
+<url><loc>https://tsnext-tw.thcl.dev/users/payment</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2023-01-24T00:59:46.907Z</lastmod></url>
+<url><loc>https://tsnext-tw.thcl.dev/users/settings</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2023-01-24T00:59:46.907Z</lastmod></url>
 </urlset>

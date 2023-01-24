@@ -48,7 +48,7 @@ export default function Header() {
         <Image src={PassBg} alt="passbg" className="absolute top-0 right-12"/>
          <Avatar src="https://picsum.photos/200" alt="avatar" width={70} height={70} className="img-circle mt-10 -ml-12" editBg="bg-brand_primary_green"/>
         <Text avatar="avatar_name">{""}</Text>
-        <Text avatar="wallet_address">{walletAddress?.substring(0, 4)+"..."+ walletAddress?.substring(5, 9)}</Text>
+        <Text avatar="wallet_address">{walletAddress.substring(0, 5)}...{walletAddress.substring(walletAddress.length - 4)}</Text>
 
         <ul className='flex items-center flex-col justify-center mt-10'>
            {links.map(({ id, href, label }) => (
@@ -73,7 +73,7 @@ export default function Header() {
         <Image src={PassBg} alt="passbg" className="absolute top-0 right-12"/>
          <Avatar src="https://picsum.photos/200" alt="avatar" width={70} height={70} className="img-circle mt-10 -ml-12" editBg="bg-brand_primary_blue"/>
         <Text avatar="avatar_name">{""}</Text>
-        <Text avatar="wallet_address">{walletAddress?.substring(0, 4)+"..."+ walletAddress?.substring(5, 9)}</Text>
+        <Text avatar="wallet_address">{walletAddress?.substring(0, 5)}...{walletAddress?.substring(walletAddress?.length - 4)}</Text>
 
         <ul className='flex items-center flex-col justify-center mt-10'>
            {links.map(({ id, href, label }) => (

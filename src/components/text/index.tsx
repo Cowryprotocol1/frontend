@@ -15,7 +15,7 @@ const textStyles = cva("", {
       h2: "sm:text-3xl text-2xl font-semibold",
       h3: "sm:text-2xl text-xl font-semibold",
       h4: "text-sm font-semibold",
-      p: "text-base",
+      p: "text-xs",
       h6: "text-amber-700 error-msg",
       
     },

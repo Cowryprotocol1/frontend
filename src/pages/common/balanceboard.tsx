@@ -37,10 +37,10 @@ const Balanceboard: NextPageWithLayout<BalanceboardProps> = ({children}) => {
   
   return (
     <div className="relative w-full md:w-[65%]  h-[auto] mb-6 rounded-xl bg-white shadow-[0px_1px_0px_rgba(0,0,0,0.1)]">
-      <Image src={BImage} alt="bal_image" className="w-[18%] right-0 absolute" />
+      <Image src={BImage} alt="bal_image" className="w-[15%] mb-4 right-0 absolute" />
       <div className="py-4 px-6">
         <Text className="font-thin text-sm">{headerText} {view ? <BsFillEyeSlashFill className='text-[#D4D4D4] inline-block ml-2' size={20} onClick={()=>setView(false)}/>:<BsFillEyeFill className='text-[#D4D4D4] inline-block ml-2' size={20} onClick={()=>setView(true)}/>}</Text>
-        <div className="flex my-4 md:mt-16 flex-row items-center justify-center md:justify-between">
+        <div className="flex my-4 md:mt-20 flex-row items-center justify-center md:justify-between">
           <div className="flex flex-row items-center">
             <div className="w-[40px] h-[40px] rounded-lg bg-[#E9FAF0] mr-2 flex  flex-col justify-center items-center">
               <RiBankFill  size={25} className=" text-brand_primary_green"/>

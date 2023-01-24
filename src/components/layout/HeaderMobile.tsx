@@ -74,7 +74,7 @@ export default function MobileHeader({ alt, image, route, handleLogOut, walletAd
         <Image src={PassBg} alt="passbg" className="absolute top-16 right-16"/>
          <Avatar src="https://picsum.photos/200" alt="avatar" width={70} height={70} className="img-circle mt-10 -ml-12" editBg="bg-brand_primary_green"/>
         <Text avatar="avatar_name">{""}</Text>
-        <Text avatar="wallet_address">{walletAddress?.substring(0, 4)+"..."+ walletAddress?.substring(5, 9)}</Text>
+        <Text avatar="wallet_address">{walletAddress?.substring(0, 5)}...{walletAddress?.substring(walletAddress?.length - 4)}</Text>
 
         <ul className='flex items-center flex-col justify-center'>
           {links.map(({ id, href, label }) => (

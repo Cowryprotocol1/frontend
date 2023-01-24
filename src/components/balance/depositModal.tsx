@@ -214,7 +214,7 @@ useEffect(() => {
           </div>
           <div className="flex flex-row justify-between items-center my-2">
             <p className=" text-xs font-thin text-[#414141]">Address to Credit</p>
-            <p className=" text-xs font-thin text-brand_primary_green">{walletAddress.substring(0, 5)}...{walletAddress.substring(walletAddress.length - 4)}</p>
+            <p className=" text-xs font-thin text-brand_primary_green">{walletAddress?.substring(0, 5)}...{walletAddress?.substring(walletAddress?.length - 4)}</p>
           </div>
           <div className="flex flex-row justify-between items-center my-2">
             <p className=" text-xs font-thin text-[#414141]">Paying Bank</p>

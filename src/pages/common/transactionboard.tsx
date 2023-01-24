@@ -28,7 +28,7 @@ const Transactionboard: NextPageWithLayout<TransactionboardProps> = ({children})
       {transactions?.length > 0 ? 
       <>
         <div className="flex flex-row justify-center px-10">
-          <Text className='font-thin pt-4'>{headerText} ({total})</Text>
+          <Text className='font-thin pt-4 text-xs'>{headerText} ({total})</Text>
         </div>
         <Donut />
       </>
