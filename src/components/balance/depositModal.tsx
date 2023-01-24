@@ -141,7 +141,7 @@ const handleCloseModal = ()=>{
   setIsLoading(false)
   let d = getTransactions(walletAddress , role)
   d.then((res:any)=>{  
-    setTransactions(res.all_transactions.reverse())
+    setTransactions(res.all_transactions)
   })
 }
 useEffect(() => {

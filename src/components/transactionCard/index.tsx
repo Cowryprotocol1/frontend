@@ -40,7 +40,7 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
             </tr>
             </thead>
             <tbody>
-                {transactions?.map(({id, transaction_amount, transaction_narration, transaction_status, transaction_type})=>{
+                {transactions?.map(({id, transaction_amount, transaction_narration, transaction_status, transaction_type, created_at})=>{
                     return (
                         <tr className="text-xs cursor-pointer" key={id} onClick={()=>handleTxnModal(id)}>
                             <td className="px-4 py-2 font-thin text-[#818181]">{id}</td>
@@ -53,7 +53,7 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
                                 {transaction_narration}
                             </td>
                             <td className={`px-4 py-2 font-thin ${transaction_type === "deposit" ? "text-brand_primary_green" : "text-[#E50808]"} `}>{transaction_type === "deposit" ? "+" : "-"}N{transaction_amount}</td>
-                            <td className="px-4 py-2 font-thin">09:07:12 AM | 19-12-2022</td>
+                            <td className="px-4 py-2 font-thin">{created_at?.split("T")[1]} | {created_at?.split("T")[0]}</td>
                             <td className="px-4 py-2 font-thin">
                                 {transaction_status === "completed" && 
                                 <span className='p-2 text-[#21C460] bg-[#E4F8EC] rounded-sm text-xs'>{transaction_status}</span>
@@ -82,7 +82,7 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
         }
         {/* mobile table */}
         <div className='w-full px-4 md:hidden overflow-auto h-[45vh]'>
-            {transactions?.map(({id, transaction_amount, transaction_narration, transaction_status, transaction_type})=>{
+            {transactions?.map(({id, transaction_amount, transaction_narration, transaction_status, transaction_type, created_at})=>{
                 return (
                     <div key={id} onClick={()=>handleTxnModal(id)} className="cursor-pointer my-2">
                     <div className='flex flex-row justify-between items-center '>
@@ -102,7 +102,7 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
                     {transaction_status === "processing" && 
                     <span className='py-1 px-2 text-[#42ADE2] bg-[#E8F5FB] rounded-sm text-[10px]'>{transaction_status}</span>
                     }
-                        <p className="text-[10px] py-1 font-thin text-[#818181]">09:07:12 AM | 19-12-2022</p>
+                        <p className="text-[10px] py-1 font-thin text-[#818181]">{created_at?.split("T")[1]} | {created_at?.split("T")[0]}</p>
                     </div>
                     </div>
                 )
@@ -143,7 +143,7 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
             <div>
                 <div className="flex flex-row justify-between items-center mt-4">
                     <div>
-                        <p className="text-xs font-thin">09:07:12 AM</p>
+                        <p className="text-xs font-thin">{modalData[0]?.created_at?.split("T")[1]}</p>
                         <p className="text-xs font-thin text-[#818181]">Transaction Time</p>
                     </div>
                     <div>
@@ -168,7 +168,7 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
                 </div>
                 <div className="flex flex-row justify-between items-center mt-4">
                     <div>
-                        <p className="text-xs font-thin">19-12-2022</p>
+                        <p className="text-xs font-thin">{modalData[0]?.created_at?.split("T")[0]}</p>
                         <p className="text-xs font-thin text-[#818181]">Transaction Date</p>
                     </div>
                     <div>
