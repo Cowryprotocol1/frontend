@@ -164,6 +164,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     if (logout !== null) {
       setLogout(true);
       localStorage.removeItem("logout")
+      localStorage.removeItem("userType")
       localStorage.removeItem("walletAddress")
       window.location.href = "/";
     } 
@@ -301,7 +302,10 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         if (x == null) {
           localStorage.setItem("userType", "ifp") 
         }
-        setRole("ifp")
+        else{
+          setRole("ifp")
+        }
+        
         window.location.href = "/ifps/dashboard";
         return response;
       }
@@ -310,12 +314,15 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         if (x == null) {
           localStorage.setItem("userType", "user") 
         }
-        setRole("user")  
+        else{
+          setRole("user") 
+        }
+        
         window.location.href = "/users/dashboard";
       }
     })
   };
-  // getAccount("user")
+ 
   useEffect(() => {
     initialUserWithWalletStatus
   }, [userData])

@@ -54,7 +54,7 @@ export default function MobileHeader({ alt, image, route, handleLogOut, walletAd
     }
   }, [userData, role])
 
-console.log(label)
+// console.log(label)
   const links = [
     { id: 1, href: `/${route}/dashboard`, label: 'Dashboard' },
     { id: 2, href: `/${route}/payment`, label: 'Payment'},
