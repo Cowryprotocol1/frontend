@@ -294,10 +294,10 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const handleLogin = () => {
     const walletAdd = localStorage.getItem("walletAddress")
     let x = localStorage.getItem("userType") 
-  if ( walletAdd === null && walletAddress !== null) {
-    localStorage.setItem("walletAddress", walletAddress)
-  }
-    getAccount().then(response=>{
+    if ( walletAdd === null && walletAddress !== null) {
+      localStorage.setItem("walletAddress", walletAddress)
+    }
+      getAccount().then(response=>{
       if (response.status === "successful") {
         if (x == null) {
           localStorage.setItem("userType", "ifp") 
@@ -330,6 +330,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     let x = localStorage.getItem("userType") 
     getAccount().then(response=>{
+      // console.log(response, "reres")
       if (response.status === "successful") {
         if (x !== null && x === "user") {
           localStorage.setItem("userType", "ifp") 

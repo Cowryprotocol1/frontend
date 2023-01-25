@@ -27,11 +27,8 @@ const Balanceboard: NextPageWithLayout<BalanceboardProps> = ({children}) => {
 
   const [view, setView] = useState(true)
 
-  // const [depositOpen, setDepositOpen] = useState(false);
-  // const [withdrawOpen, setWithdrawOpen] = useState(false);
+
   const NGN = balances?.filter((bal)=> bal.asset_code === "NGN")
-  const NGNALLOW = balances?.filter((bal)=> bal.asset_code === "NGNALLOW")
-  const NGNLICENSE = balances?.filter((bal)=> bal.asset_code === "NGNLICENSE")
   // const USDC = balances?.filter((bal)=> bal.asset_code === "USDC")
   // const XLM = balances?.filter((bal)=> bal.asset_type === "native")
   

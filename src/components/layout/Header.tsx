@@ -76,7 +76,7 @@ export default function Header() {
         <Text avatar="wallet_address">{walletAddress?.substring(0, 5)}...{walletAddress?.substring(walletAddress?.length - 4)}</Text>
 
         <ul className='flex items-center flex-col justify-center mt-10'>
-           {links.map(({ id, href, label }) => (
+           {links.filter((link)=>link.label !=="Payment").map(({ id, href, label }) => (
             <HeaderButton 
               key={id}
               href={href} 
