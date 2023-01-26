@@ -6,7 +6,7 @@ import Transaction from '../common/transactions';
 
 function Dashboard() {
   const dashboardData = {
-    title: "IFP Dashboard"
+    title: "Dashboard"
   }
   const [isTxn, setIsTxn] = useState(false)
   return (

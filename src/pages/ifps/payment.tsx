@@ -4,7 +4,7 @@ import Mainboard from '@/pages/common/mainboard';
 
 function Payment() {
   const paymentData = {
-    title: "IFP Payment"
+    title: "Payment"
   }
   return (
     <div>

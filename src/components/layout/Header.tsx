@@ -67,7 +67,7 @@ export default function Header() {
     </section>
     }
     {route === "ifps" &&
-    <section className={`h-full bg-brand_primary_green hidden md:block sidebar md:pl-8 md:pr-12  md:col-span-2`}>
+    <section className={`min-h-[100vh] h-full bg-brand_primary_green hidden md:block sidebar md:pl-8 md:pr-12  md:col-span-2`}>
       <Image src={LogoWhite}className="mb-8 mt-8 pr-8 cursor-pointer" alt="Logo" onClick={toggleLogoutMode}/>
       <div className="relative w-full">
         <Image src={PassBg} alt="passbg" className="absolute top-0 right-12"/>

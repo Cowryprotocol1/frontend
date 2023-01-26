@@ -44,6 +44,7 @@ export default function HomePage() {
     
   };
   async function handleSelectedWallet(type: string){
+    localStorage.setItem("vendor", type) 
     let x;
     switch (type) {
       case "XBULL":

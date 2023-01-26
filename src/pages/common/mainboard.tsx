@@ -4,16 +4,16 @@ import React, {useEffect,useState} from 'react';
 import Header from '@/components/layout/Header';
 import Layout from '@/components/layout/Layout';
 import TopBar from '@/components/layout/TopBar';
-import { useRouter } from 'next/router';
 import type { NextPageWithLayout } from "../_app";
 import { useUser } from "../../store/user";
 
 type MainboardProps = {
   title: string;
+  text?: string;
   children?: any;
 }
 
-const Mainboard: NextPageWithLayout<MainboardProps> = ({title, children}) => {
+const Mainboard: NextPageWithLayout<MainboardProps> = ({title, text, children}) => {
 
   const [name, setName] = useState("")
   const { 
@@ -41,10 +41,6 @@ const Mainboard: NextPageWithLayout<MainboardProps> = ({title, children}) => {
     })
   }, [])
 
-
-  
-  
-
   return (
     <div className="parent md:h-full md:grid md:grid-cols-8 overflow-hidden">
       <Header />
@@ -53,6 +49,7 @@ const Mainboard: NextPageWithLayout<MainboardProps> = ({title, children}) => {
           <TopBar username={name} role={role}/>
           <div className="p-4 md:p-8 md:pr-0 h-full min-h-[90vh]">
             <p className="font-thin text-xl md:text-2xl mb-2 md:mb-8">{title}</p>
+            {text && <p className="font-thin text-[#818181] text-xs md:text-sm mb-2 md:mt-[-1.5rem]">{text}</p>}
             {children}
           </div>
         </div>

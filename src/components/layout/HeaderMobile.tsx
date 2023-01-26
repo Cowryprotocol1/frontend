@@ -106,10 +106,10 @@ export default function MobileHeader({ alt, image, route, handleLogOut, walletAd
       </div> 
       )} 
       {isOpen && route === "ifps" && ( 
-        <div className={`fixed top-0 left-0 bg-brand_primary_green w-2/3 h-fit p-4`}> 
+        <div className={`fixed top-0 left-0 bg-brand_primary_green w-2/3 h-fit p-4 z-10`}> 
         <SlClose size={25} className="text-white_day mb-4" onClick={toggleModal}/>
         <ul className='flex items-center flex-col justify-center'>
-          {links.map(({ id, href, label }) => (
+          {links.filter((link)=>link.label !=="Payment" && link.label !=="Top up").map(({ id, href, label }) => (
             <HeaderButton 
             key={id}
               href={href} 

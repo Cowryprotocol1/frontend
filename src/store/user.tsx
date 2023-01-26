@@ -25,6 +25,8 @@ export type UserContextProps = {
   initialUserWithWalletStatus: any;
   walletAddress: "";
   setWalletAddress: React.Dispatch<React.SetStateAction<any>>;
+  walletVendor: "";
+  setWalletVendor: React.Dispatch<React.SetStateAction<any>>;
 
   logout: boolean;
   setLogout:  React.Dispatch<React.SetStateAction<boolean>>;
@@ -67,7 +69,9 @@ const UserContext = createContext<UserContextProps>({
 
   walletAddress: "",
   setWalletAddress: () => null,
-  
+  walletVendor: "",
+  setWalletVendor: () => null,
+
   transactions: null,
   setTransactions: ()=> null,
   balances: null,
@@ -154,6 +158,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [logout, setLogout] = useState(false)
   const [role, setRole] = useState(initialRoleStatus)
   const [walletAddress, setWalletAddress] = useState(null);
+  const [walletVendor, setWalletVendor] = useState(null);
   const [transactions, setTransactions] = useState([]);
   const [balances, setBalances] = useState([]);
   const [depositOpen, setDepositOpen] = useState(false);
@@ -330,7 +335,19 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     let x = localStorage.getItem("userType") 
     getAccount().then(response=>{
-      // console.log(response, "reres")
+      console.log(response, "reres")
+
+      // to revert to User
+
+      // if (response.status === "successful") {
+      //   if (x !== null && x === "ifp") {
+      //     localStorage.setItem("userType", "user") 
+      //     console.log("You are now an IFP")
+      //     setRole("user")
+      //     window.location.href = "/users/dashboard";
+      //   }
+      // }
+      
       if (response.status === "successful") {
         if (x !== null && x === "user") {
           localStorage.setItem("userType", "ifp") 
@@ -352,6 +369,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       handleLogin,
       walletAddress, 
       setWalletAddress, 
+      walletVendor, 
+      setWalletVendor, 
       logout,
       setLogout,
       toggleLogoutMode,
