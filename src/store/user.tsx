@@ -335,8 +335,9 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       localStorage.setItem("walletAddress", walletAddress)
     }
       getAccount(walletAdd).then(response=>{
-        setIFPData(response)
+        
       if (response.status === "successful") {
+        setIFPData(response)
         if (x == null) {
           localStorage.setItem("userType", "ifp") 
         }
@@ -375,7 +376,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     let x = localStorage.getItem("userType") 
     // console.log(walletAddress)
     getAccount(walletAddress).then(response=>{
-      // console.log(response, "reres")
+      console.log(response, "reres")
       // to revert to User
 
       // if (response.status === "successful") {
@@ -388,6 +389,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       // }
       
       if (response.status === "successful") {
+        setIFPData(response)
         if (x !== null && x === "user") {
           localStorage.setItem("userType", "ifp") 
           console.log("You are now an IFP")
