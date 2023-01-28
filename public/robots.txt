@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Host
-Host: https://tsnext-tw.thcl.dev
+Host: https://cowry-frontend.herokuapp.com
 
 # Sitemaps
-Sitemap: https://tsnext-tw.thcl.dev/sitemap.xml
+Sitemap: https://cowry-frontend.herokuapp.com/sitemap.xml
