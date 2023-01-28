@@ -21,6 +21,7 @@ const Transaction: NextPageWithLayout<TransactionProps> = ({setIsTxn, isTxn,chil
   const nextText: string = "Click to Search";
   const {transactions, depositOpen, setDepositOpen, withdrawOpen, setWithdrawOpen} =useUser();
   const [modalOpen, setModalOpen] = useState(false);
+  // console.log(transactions)
   return (
     <>
     <div className="relative w-full mb-6 h-[auto] rounded-xl bg-white shadow-[0px_1px_0px_rgba(0,0,0,0.1)]">

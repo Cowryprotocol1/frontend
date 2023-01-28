@@ -27,7 +27,8 @@ export type UserContextProps = {
   setWalletAddress: React.Dispatch<React.SetStateAction<any>>;
   walletVendor: "";
   setWalletVendor: React.Dispatch<React.SetStateAction<any>>;
-
+  IFPData: any; 
+  setIFPData:React.Dispatch<React.SetStateAction<any>>;
   logout: boolean;
   setLogout:  React.Dispatch<React.SetStateAction<boolean>>;
   toggleLogoutMode: any;
@@ -35,11 +36,13 @@ export type UserContextProps = {
   getTransactions: any;
   getBalance: any;
   getDepositIntent: any;
+  getAccount: any;
   getWithdrawalIntent: any;
   onboardIFP:any;
   postPaymentConfirmation: any;
   role: string;
 
+  getDepositIntentIFP: any;
   transactions: any; 
   setTransactions: React.Dispatch<React.SetStateAction<any>>;
   setBalances:React.Dispatch<React.SetStateAction<any>>;
@@ -66,6 +69,7 @@ const UserContext = createContext<UserContextProps>({
   getWithdrawalIntent:()=>null,
   onboardIFP:()=>null,
   role: "",
+  getDepositIntentIFP:()=>null,
 
   walletAddress: "",
   setWalletAddress: () => null,
@@ -83,7 +87,10 @@ const UserContext = createContext<UserContextProps>({
   setWithdrawOpen: ()=>null,
   postPaymentConfirmation:()=>null,
   conversionOpen:null,
-  setConversionOpen: ()=>null
+  setConversionOpen: ()=>null,
+  IFPData: null, 
+  setIFPData:()=>null,
+  getAccount:()=>null,
 });
 
 
@@ -164,6 +171,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [depositOpen, setDepositOpen] = useState(false);
   const [withdrawOpen, setWithdrawOpen] = useState(false);
   const [conversionOpen, setConversionOpen] = useState(false)
+  const [IFPData, setIFPData] = useState(null)
 
   const toggleLogoutMode = () => {
     if (logout !== null) {
@@ -240,6 +248,30 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const getDepositIntentIFP = async (txn_id: string)=> {
+    let wData = {
+      merchant_pubKey: walletAddress,
+      transaction_Id: txn_id,
+      merchant_id: IFPData?.account_id,
+
+    }
+    // console.log(wData)
+    try {
+      const response = await fetch(`${url}/merchants`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(wData),
+      })
+      let res = response.json()
+      return res
+    } catch (error) {
+      throw error;
+    }
+  };
+
+
   const getWithdrawalIntent = async (data: any)=> {
     let wData = {
       amount: parseFloat(data.amount),
@@ -285,9 +317,9 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const getAccount = async ()=> {
+  const getAccount = async (address: string)=> {
     try {
-      const response = await fetch(`${url}/accounts?account_id=${walletAddress}`)
+      const response = await fetch(`${url}/accounts?account_id=${address}`)
       let res = response.json()
       return res
       
@@ -302,7 +334,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     if ( walletAdd === null && walletAddress !== null) {
       localStorage.setItem("walletAddress", walletAddress)
     }
-      getAccount().then(response=>{
+      getAccount(walletAdd).then(response=>{
+        setIFPData(response)
       if (response.status === "successful") {
         if (x == null) {
           localStorage.setItem("userType", "ifp") 
@@ -332,11 +365,17 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     initialUserWithWalletStatus
   }, [userData])
 
-  useEffect(() => {
-    let x = localStorage.getItem("userType") 
-    getAccount().then(response=>{
-      console.log(response, "reres")
+  // useEffect(() => {
+  //   getAccount().then(response=>console.log(response, "wdfdwgdf"))
+  // }, [])
+  
 
+  useEffect(() => {
+    console.log(role)
+    let x = localStorage.getItem("userType") 
+    // console.log(walletAddress)
+    getAccount(walletAddress).then(response=>{
+      // console.log(response, "reres")
       // to revert to User
 
       // if (response.status === "successful") {
@@ -392,7 +431,11 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       setWithdrawOpen,
       postPaymentConfirmation,
       conversionOpen,
-      setConversionOpen
+      setConversionOpen,
+      IFPData,
+      setIFPData,
+      getAccount,
+      getDepositIntentIFP 
     }}>
       {children}
     </UserContext.Provider>

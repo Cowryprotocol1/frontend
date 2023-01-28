@@ -126,3 +126,4 @@ export default function MobileHeader({ alt, image, route, handleLogOut, walletAd
     </header>
   );
 }
+

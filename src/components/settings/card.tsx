@@ -16,40 +16,43 @@ type SettingsCardProps = {
 }
 
 const SettingsCard: NextPageWithLayout<SettingsCardProps> = ({headerText,arr,children}) => {
-    const {walletAddress} = useUser();
+    const {walletAddress, IFPData} = useUser();
+
     const [form, setForm] = useState({
         email: '',
         firstname:'',
         lastname:'',
         billingAddress:'',
         vendor:'',
-        address:''
+        address:'',
+        bank:'',
+        phone:'',
+        ifp_id:''
     });
 
     useEffect(() => {
-        console.log(localStorage.getItem("vendor"))
+        // console.log(IFPData, "IFPData")
       setForm({
-        email: '',
+        email: IFPData?.ifp_email_addr,
         firstname:'',
         lastname:'',
+        bank: IFPData?.ifp_acct_name,
+        phone:IFPData?.ifp_phone_name,
         billingAddress:'',
+        ifp_id:IFPData?.account_id,
         vendor:localStorage.getItem("vendor"),
-        address:walletAddress  
+        address:IFPData?.ifp_block_addr,
       })
     }, [])
     
-    // const handleChange = (e: React.ChangeEvent<HTMLInputElement> | any)=>{
-    //     setForm({
-    //       ...form,
-    //       [e.target.name]: e.target.value
-    //     })
-    //   }
+
   return (
     <div className="w-full h-[auto] p-4 md:p-8 my-6 flex flex-col rounded-xl bg-white  shadow-[0px_1px_0px_rgba(0,0,0,0.1)]">
         <p>{headerText}</p>
         <div className="grid md:grid-cols-2 gap-4 my-4">
             {arr.map(({type, placeholder,name, id})=>{
                 return(
+                  <div key={id} className="w-[100%] relative ">
                     <input
                         key={id} 
                         type={type} 
@@ -57,9 +60,11 @@ const SettingsCard: NextPageWithLayout<SettingsCardProps> = ({headerText,arr,chi
                         placeholder={placeholder}
                         value={form?.[name]}
                         disabled={true}
-                        // onChange={handleChange}
                         className="bg-transparent border-1 h-[45px] border-[#EDEDED] text-black w-full md:w-[100%] text-xs  font-thin rounded"
                     />
+                    <p className="text-[9px] text-[#414141] absolute top-[-0.5rem] md:top-[-0.7rem] px-1 left-2 md:left-4 bg-white">{placeholder}</p>
+                    </div>
+                    
                 )
             })}
         </div>

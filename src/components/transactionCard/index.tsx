@@ -8,7 +8,9 @@ import { BsJournalBookmark } from 'react-icons/bs';
 import WhiteModal from '@/components/modal/whitemodal';
 import { Dialog } from '@headlessui/react';
 import Image from 'next/image';
-import Logo from '../../../public/images/logo_c.png'
+import Logo from '../../../public/images/logo_c.png';
+import { currencyFormatter } from '@/pages/common/ifp_balanceboard';
+import {HiOutlineArrowSmLeft} from 'react-icons/hi'
 type TransactionCardProps = {
   children?: any;
 }
@@ -16,14 +18,36 @@ type TransactionCardProps = {
 const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) => {
   const [modalData, setModalData] = useState([])
   const [modalOpen, setModalOpen] = useState(false);
+  const [next, setNext] = useState(1);
   const [user, setUser] = useState(false);
-  const {transactions} = useUser();
-//   console.log(transactions, "trans")
+  const [isLoading, setIsLoading] = useState(false);
+  const [intentResult, setIntentResult] = useState(null);
+  const {transactions, IFPData, getDepositIntentIFP, getTransactions, role, walletAddress, setTransactions} = useUser();
+  console.log(IFPData?.account_id, "trans")
     const handleTxnModal = (id:any)=>{
         const txn = transactions.filter((txn:any)=>txn.id === id)
         setModalData(txn)
         setModalOpen(true)
     }
+    const handlegetDepositIntentIFP =(txn_id: string)=>{
+        setIsLoading(true)
+        getDepositIntentIFP(txn_id).then(res=>{
+            console.log(res)
+            setIntentResult(res)
+            setNext(2)
+            setIsLoading(false)
+        })
+    }
+    const handleCloseModal = ()=>{
+        setModalOpen(false)
+      setIntentResult(null)
+        setNext(1)
+        setIsLoading(false)
+        let d = getTransactions(walletAddress , role)
+        d.then((res:any)=>{  
+          setTransactions(res.all_transactions)
+        })
+      }
     
   return (
     <div className="md:container md:mx-auto pb-4 overflow-auto h-[40vh]">
@@ -40,9 +64,9 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
             </tr>
             </thead>
             <tbody>
-                {transactions?.map(({id, transaction_amount, transaction_narration, transaction_status, transaction_type, created_at})=>{
+                {transactions?.map(({id, transaction_amount, transaction_narration, transaction_status, transaction_type, created_at, merchant})=>{
                     return (
-                        <tr className="text-xs cursor-pointer" key={id} onClick={()=>handleTxnModal(id)}>
+                        <tr className={`text-xs cursor-pointer ${merchant[0] === IFPData?.account_id && transaction_status === "pending" ? "bg-[#FCF4EA]": null}`} key={id} onClick={()=>handleTxnModal(id)}>
                             <td className="px-4 py-2 font-thin text-[#818181]">{id}</td>
                             <td className="px-4 py-2 font-thin flex items-center">
                             {transaction_type === "deposit" ? 
@@ -81,10 +105,10 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
         
         }
         {/* mobile table */}
-        <div className='w-full px-4 md:hidden overflow-auto h-[45vh]'>
-            {transactions?.map(({id, transaction_amount, transaction_narration, transaction_status, transaction_type, created_at})=>{
+        <div className='w-full px-1 md:hidden overflow-auto h-[45vh]'>
+            {transactions?.map(({id, transaction_amount, transaction_narration, transaction_status, transaction_type, created_at, merchant})=>{
                 return (
-                    <div key={id} onClick={()=>handleTxnModal(id)} className="cursor-pointer my-2">
+                    <div key={id} onClick={()=>handleTxnModal(id)} className={` px-3 cursor-pointer my-2 ${merchant[0] === IFPData?.account_id && transaction_status === "pending" ? "bg-[#FCF4EA]": null}`}>
                     <div className='flex flex-row justify-between items-center '>
                         <p className="text-xs py-1 font-thin">{transaction_narration}</p>
                         <p className={`text-xs py-1 font-thin ${transaction_type === "deposit" ? "text-brand_primary_green" : "text-[#E50808]"}`}>{transaction_type === "deposit" ? "+" : "-"}N{parseFloat(transaction_amount).toFixed(2)}</p>
@@ -109,22 +133,29 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
             })}
         </div>
         
-    <WhiteModal isOpen={modalOpen} setIsOpen={()=>{
-      setModalOpen(false)
-    }}>
+    <WhiteModal isOpen={modalOpen} setIsOpen={()=>{handleCloseModal }}>
       <Dialog.Title
         as="h3"
         className="text-center text-lg font-medium leading-6 mb-6"
       >
+        <HiOutlineArrowSmLeft size={25} className=" absolute left-4 text-black mb-4 cursor-pointer" onClick={handleCloseModal}/>
        <p className="font-thin text-sm">Transaction Details</p>
       </Dialog.Title>
+      {next === 1 &&
       <>
+      
       <div className="relative w-3/4 mt-8 flex flex-row justify-center  h-[auto] pb-6 mb-6 rounded-xl bg-white drop-shadow-2xl">
         <Image src={Logo} alt="logo" className='w-[15%] absolute top-[-3vh] '/>
 
         <div className='mt-8'>
+            {modalData[0]?.merchant[0] === IFPData?.account_id ? 
+            <p className="font-thin text-sm text-[#818181]">You {modalData[0]?.transaction_type === "deposit" ? "Recieved": "Sent"}</p>
+            :
             <p className="font-thin text-sm text-[#818181]">You {modalData[0]?.transaction_type === "deposit" ? "Bought": "Sold"}</p>
-            <p className={`font-medium text-2xl ${modalData[0]?.transaction_type === "deposit" ? "text-brand_primary_green": "text-[#E50808]"} `}>{parseFloat(modalData[0]?.transaction_amount).toFixed(2)} <span className="font-thin text-[#818181]">NGN</span></p>
+            }
+            <p className={`font-medium text-2xl ${modalData[0]?.transaction_type === "deposit" ? "text-brand_primary_green": "text-[#E50808]"} `}>
+                {parseFloat(modalData[0]?.transaction_amount).toFixed(2)} 
+                <span className="font-thin text-[#818181]">NGN</span></p>
         </div>
       </div>
       <div className="w-full">
@@ -190,15 +221,17 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
                     </div>
                     <div>
                         <p className="text-xs font-thin text-[#21C460] underline">
-                            {modalData[0]?.users_address.substring(0, 5)}...{modalData[0]?.users_address.substring(modalData[0]?.users_address.length - 4)}
+                            {modalData[0]?.users_address?.substring(0, 5)}...{modalData[0]?.users_address?.substring(modalData[0]?.users_address?.length - 4)}
                             </p>
                         <p className="text-xs font-thin text-[#818181]">Wallet Address</p>
                     </div>
                     <div>
                         <p className="text-xs font-thin">
-                            {modalData[0]?.merchant[0].substring(0, 3)}...{modalData[0]?.merchant[0].substring(modalData[0]?.merchant[0]?.length - 4)}
+                            {modalData[0]?.merchant[0] === IFPData?.account_id && "(YOU)"}
+                            {" "}
+                            {modalData[0]?.merchant[0]?.substring(0, 3)}...{modalData[0]?.merchant[0]?.substring(modalData[0]?.merchant[0]?.length - 4)}
                             </p>
-                        <p className="text-xs font-thin text-[#818181]">Merchant</p>
+                        <p className="text-xs font-thin text-[#818181] text-right">Merchant</p>
                     </div>
                     
                 </div>
@@ -218,10 +251,65 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
                 </div>
             </div>
             }
+            {modalData[0]?.merchant[0] === IFPData?.account_id && modalData[0]?.transaction_status == "completed"  &&
+            modalData[0]?.transaction_hash &&
+                <div className="w-[100%] relative mt-4"> 
+                    <textarea
+                        disabled
+                        className={`bg-transparent border-1 border-[#EDEDED] text-black w-full md:w-[85%] text-xs  font-thin rounded`}
+                        rows={2}
+                        value={modalData[0]?.transaction_hash}
+                    />
+                    <p className="text-[9px] text-[#414141] absolute top-[-0.5rem] md:top-[-0.7rem] px-1 left-4 md:left-12 bg-white">Transaction Hash</p>
+                </div> 
+            }
+            {modalData[0]?.merchant[0] === IFPData?.account_id && modalData[0]?.transaction_status !== "completed"  &&
+                <button 
+                    className="mt-6 rounded-lg bg-brand_primary_blue py-4 px-8 text-xs text-white"
+                    onClick={()=>handlegetDepositIntentIFP(modalData[0]?.id)}
+                >
+                    {isLoading ? "Confirming..." : `Confirm Deposit of ${currencyFormatter.format(modalData[0]?.transaction_amount)}`}
+                </button>
+             
+            }
         </div>
       </div>
+     
+    
       </>
-      {/* {console.log(modalData)} */}
+      }
+      {next === 2 &&
+        intentResult!== null &&
+        <>
+        <Image src={Logo} alt="logo" className='w-[15%] mb-6 '/>
+        <p className="text-xs my-4 bg-[#E4F8EC] text-[#818181] p-2 rounded">{intentResult?.message}</p>
+        { intentResult?.xdr || intentResult?.transaction_hash &&
+            <>
+            <div className="w-[100%] relative mt-4"> 
+                <textarea
+                    disabled
+                    className={`bg-transparent border-1 border-[#EDEDED] text-black w-full md:w-[85%] text-xs  font-thin rounded`}
+                    rows={10}
+                    value={intentResult?.xdr || intentResult?.transaction_hash}
+                />
+                <p className="text-[9px] text-[#414141] absolute top-[-0.5rem] md:top-[-0.7rem] px-1 left-4 md:left-12 bg-white">Transaction XDR</p>
+            </div>
+            {modalData[0]?.merchant[0] === IFPData?.account_id &&
+                <button 
+                    className="mt-6 rounded-lg bg-brand_primary_blue py-4 px-8 text-xs text-white"
+                    
+                    onClick={()=>handlegetDepositIntentIFP(modalData[0]?.id)}
+                >
+                    {isLoading ? "Signing Transaction..." : `Sign Transaction for ${currencyFormatter.format(modalData[0]?.transaction_amount)}`}
+                </button>
+                
+            }
+            </>
+        }
+        
+        </>
+      }
+    
     </WhiteModal>
 
     </div>

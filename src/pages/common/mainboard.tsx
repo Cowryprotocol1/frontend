@@ -18,7 +18,8 @@ const Mainboard: NextPageWithLayout<MainboardProps> = ({title, text, children}) 
   const [name, setName] = useState("")
   const { 
     toggleLogoutMode, role, getTransactions, setTransactions,
-    getBalance, setBalances , walletAddress, setWalletAddress
+    getBalance, setBalances , walletAddress, setWalletAddress,
+    getAccount, setIFPData
   } = useUser();
 
   useEffect(() => {
@@ -29,6 +30,10 @@ const Mainboard: NextPageWithLayout<MainboardProps> = ({title, text, children}) 
     else{
       setWalletAddress(walletAddress)
     }
+    const u = getAccount(walletAddress)
+    u.then((res:any)=>{  
+      setIFPData(res)
+    })
     // const d = getTransactions("GBZGNJFRXS2AQ6GQ2QNSRFTA54W6Z36KMTKSJ35GEWBXH4RWJLULLBVH" , "ifp")
     let d = getTransactions(walletAddress , role)
     d.then((res:any)=>{  

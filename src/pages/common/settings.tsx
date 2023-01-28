@@ -10,6 +10,7 @@ type SettingProps = {
   children?: any;
 }
 
+        
 const profileArr =[
     {
         id: 1,
@@ -34,7 +35,19 @@ const profileArr =[
       type:"text",
       name:"billingAddress",
       placeholder:"Billing Address",
-  },
+    },
+    {
+      id: 5,
+      type:"text",
+      name:"bank",
+      placeholder:"Fiat Bank Name",
+    },
+    {
+      id: 6,
+      type:"text",
+      name:"phone",
+      placeholder:"Phone Number",
+    },
 ]
 
 const walletArr =[
@@ -50,6 +63,12 @@ const walletArr =[
         name:"address",
         placeholder:"Wallet Address",
     },
+  {
+      id: 3,
+      type:"text",
+      name:"ifp_id",
+      placeholder:"IFP Account ID",
+  },
 ]
 
 const Settingboard: NextPageWithLayout<SettingProps> = ({children}) => {
