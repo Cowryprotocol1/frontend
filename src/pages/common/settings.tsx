@@ -49,7 +49,6 @@ const profileArr =[
       placeholder:"Phone Number",
     },
 ]
-
 const walletArr =[
     {
         id: 1,

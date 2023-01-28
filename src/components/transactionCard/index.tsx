@@ -23,7 +23,7 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
   const [isLoading, setIsLoading] = useState(false);
   const [intentResult, setIntentResult] = useState(null);
   const {transactions, IFPData, getDepositIntentIFP, getTransactions, role, walletAddress, setTransactions} = useUser();
-  console.log(IFPData?.account_id, "trans")
+//   console.log(IFPData?.account_id, "trans")
     const handleTxnModal = (id:any)=>{
         const txn = transactions.filter((txn:any)=>txn.id === id)
         setModalData(txn)
@@ -32,7 +32,7 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
     const handlegetDepositIntentIFP =(txn_id: string)=>{
         setIsLoading(true)
         getDepositIntentIFP(txn_id).then(res=>{
-            console.log(res)
+            // console.log(res)
             setIntentResult(res)
             setNext(2)
             setIsLoading(false)
@@ -66,7 +66,7 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
             <tbody>
                 {transactions?.map(({id, transaction_amount, transaction_narration, transaction_status, transaction_type, created_at, merchant})=>{
                     return (
-                        <tr className={`text-xs cursor-pointer ${merchant[0] === IFPData?.account_id && transaction_status === "pending" ? "bg-[#FCF4EA]": null}`} key={id} onClick={()=>handleTxnModal(id)}>
+                        <tr className={`text-xs cursor-pointer ${merchant[0] !== null && IFPData !== null && merchant[0] === IFPData?.account_id && transaction_status === "pending" ? "bg-[#FCF4EA]": null}`} key={id} onClick={()=>handleTxnModal(id)}>
                             <td className="px-4 py-2 font-thin text-[#818181]">{id}</td>
                             <td className="px-4 py-2 font-thin flex items-center">
                             {transaction_type === "deposit" ? 
@@ -108,7 +108,7 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
         <div className='w-full px-1 md:hidden overflow-auto h-[45vh]'>
             {transactions?.map(({id, transaction_amount, transaction_narration, transaction_status, transaction_type, created_at, merchant})=>{
                 return (
-                    <div key={id} onClick={()=>handleTxnModal(id)} className={` px-3 cursor-pointer my-2 ${merchant[0] === IFPData?.account_id && transaction_status === "pending" ? "bg-[#FCF4EA]": null}`}>
+                    <div key={id} onClick={()=>handleTxnModal(id)} className={` px-3 cursor-pointer my-2 ${merchant[0] !== null && IFPData !== null && merchant[0] === IFPData?.account_id && transaction_status === "pending" ? "bg-[#FCF4EA]": null}`}>
                     <div className='flex flex-row justify-between items-center '>
                         <p className="text-xs py-1 font-thin">{transaction_narration}</p>
                         <p className={`text-xs py-1 font-thin ${transaction_type === "deposit" ? "text-brand_primary_green" : "text-[#E50808]"}`}>{transaction_type === "deposit" ? "+" : "-"}N{parseFloat(transaction_amount).toFixed(2)}</p>

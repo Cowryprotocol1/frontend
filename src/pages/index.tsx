@@ -26,7 +26,7 @@ export const redirectUrl = (url: string)=>{
 
 export default function HomePage() {
   const [availableVendors, setAvailableVendors] = useState(null)
-  const {setWalletAddress, walletAddress, handleLogin} = useUser();
+  const {setWalletAddress, getAccount, setIFPData, setRole} = useUser();
   const [modalOpen, setModalOpen] = useState(false);
   const [showFirstModal, setShowFirstModal] = useState(false);
   const [modalList, setModalList] = useState(false);
@@ -65,9 +65,35 @@ export default function HomePage() {
         break;
     }
     try {
+
       await kit.setWallet(x)
-      const publicKey = await kit.getPublicKey()
-      setWalletAddress(publicKey)
+      await kit.getPublicKey()
+      .then(res=>localStorage.setItem("walletAddress", res) )
+      .then(res=>setWalletAddress(localStorage.getItem("walletAddress")))
+      .then(res=>{
+        getAccount(localStorage.getItem("walletAddress")).then(response=>{
+          // console.log(response, "rsdecs")
+          // // /////use to check for normal USER
+          // localStorage.setItem("userType", "user") 
+          //   setRole("user")
+          //   window.location.href = "/users/dashboard";
+
+
+          if (response.status === "successful") {
+            setIFPData(response)
+            localStorage.setItem("userType", "ifp") 
+            setRole("ifp")
+            window.location.href = "/ifps/dashboard";
+
+          }
+          else  {
+            localStorage.setItem("userType", "user") 
+            setRole("user")
+            window.location.href = "/users/dashboard";
+          }
+        })
+      })
+      
     } catch (e) {
       console.log(e);
       setError("Oops! an error occured.")
@@ -97,11 +123,6 @@ export default function HomePage() {
     getWalletList();
   }, []);
   
-  useEffect( () => {
-    if (walletAddress !== null) {
-      handleLogin()
-    } 
-  }, [walletAddress]);
 
   return (
     <Layout>

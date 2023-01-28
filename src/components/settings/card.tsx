@@ -16,7 +16,7 @@ type SettingsCardProps = {
 }
 
 const SettingsCard: NextPageWithLayout<SettingsCardProps> = ({headerText,arr,children}) => {
-    const {walletAddress, IFPData} = useUser();
+    const {walletAddress, IFPData, role} = useUser();
 
     const [form, setForm] = useState({
         email: '',
@@ -31,7 +31,6 @@ const SettingsCard: NextPageWithLayout<SettingsCardProps> = ({headerText,arr,chi
     });
 
     useEffect(() => {
-        // console.log(IFPData, "IFPData")
       setForm({
         email: IFPData?.ifp_email_addr,
         firstname:'',
@@ -41,7 +40,7 @@ const SettingsCard: NextPageWithLayout<SettingsCardProps> = ({headerText,arr,chi
         billingAddress:'',
         ifp_id:IFPData?.account_id,
         vendor:localStorage.getItem("vendor"),
-        address:IFPData?.ifp_block_addr,
+        address:walletAddress,
       })
     }, [])
     
@@ -52,7 +51,7 @@ const SettingsCard: NextPageWithLayout<SettingsCardProps> = ({headerText,arr,chi
         <div className="grid md:grid-cols-2 gap-4 my-4">
             {arr.map(({type, placeholder,name, id})=>{
                 return(
-                  <div key={id} className="w-[100%] relative ">
+                  <div key={id} className={`w-[100%] relative ${role === 'user' && name === 'ifp_id' && "hidden"}`}>
                     <input
                         key={id} 
                         type={type} 

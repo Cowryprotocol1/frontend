@@ -2,7 +2,6 @@ import React, { createContext, useContext, useEffect,useState } from "react";
 
 import { User } from "@/constant/dummydata";
 
-import { redirectUrl } from '@/pages';
 
 const url = `https://cowryprotocol.io`;
 const stellar_url = ` https://horizon-testnet.stellar.org`
@@ -21,8 +20,6 @@ export type UserProp = {
 export type UserContextProps = {
   userData: UserProp | null;
   setUserData: React.Dispatch<React.SetStateAction<UserProp>>;
-  initialUserStatus: any;
-  initialUserWithWalletStatus: any;
   walletAddress: "";
   setWalletAddress: React.Dispatch<React.SetStateAction<any>>;
   walletVendor: "";
@@ -32,7 +29,6 @@ export type UserContextProps = {
   logout: boolean;
   setLogout:  React.Dispatch<React.SetStateAction<boolean>>;
   toggleLogoutMode: any;
-  handleLogin: any;
   getTransactions: any;
   getBalance: any;
   getDepositIntent: any;
@@ -53,14 +49,13 @@ export type UserContextProps = {
   setWithdrawOpen: React.Dispatch<React.SetStateAction<boolean>>;
   conversionOpen:any;
   setConversionOpen:React.Dispatch<React.SetStateAction<boolean>>;
+  setRole:React.Dispatch<React.SetStateAction<string>>;
 };
 
 const UserContext = createContext<UserContextProps>({
   userData: User[0] || null,
   setUserData: () => null,
-  initialUserStatus: ()=> null,
-  initialUserWithWalletStatus:()=> null,
-  handleLogin:() => null,
+
   logout: null ,
   setLogout: ()=> null,
   toggleLogoutMode: ()=>null,
@@ -89,68 +84,13 @@ const UserContext = createContext<UserContextProps>({
   conversionOpen:null,
   setConversionOpen: ()=>null,
   IFPData: null, 
+  setRole:()=>null,
   setIFPData:()=>null,
   getAccount:()=>null,
 });
 
 
 
-
-const initialUserStatus = () => {
-  if (typeof window === "undefined") return;
-  const user = localStorage.getItem("userType") 
-  if (user === "user") {
-    return User[0]
-  }
-  else if (user === "ifp") {
-    return User[1]
-  }
-
-}
-
-const initialUserWithWalletStatus = (data: string) => {
-  if (typeof window === "undefined") return;
-  // const user = localStorage.getItem("userType") 
-  const userData = localStorage.getItem("userData")
-   
-  if ( userData !== null && JSON.parse(userData).role === "user") {
-    // console.log(userData,"see me user")
-    return JSON.parse(userData)
-  }
-  else if (userData !== null && JSON.parse(userData).role === "ifp") {
-    // console.log("see me ifp")
-    return JSON.parse(userData)
-  }
-  else{
-    // get user role status from cowryprotocol backend
-    
-    let isBackend = false
-    if (isBackend) {
-      if (JSON.parse(userData).role === "user") {
-        // User Data 
-
-        // localStorage.setItem("userType", user);
-        // localStorage.setItem("userData", JSON.stringify(User[0]))
-        // setUserData(User[0]);
-        // push("/users/dashboard");
-      }
-      else if (JSON.parse(userData).role === "user") {
-        // localStorage.setItem("userData", JSON.stringify(User[1]))
-        // setUserData(User[1]);
-        // push("/ifps/dashboard");
-      }
-    }
-    else{
-      // console.log("see me genere")
-      // localStorage.setItem("userType", user);
-      // localStorage.setItem("userData", JSON.stringify(User[0]))
-      return null
-    }
-    
-  }
-  
-
-}
 const initialRoleStatus = () => {
   if (typeof window === "undefined") return;
   const role = localStorage.getItem("userType") 
@@ -161,7 +101,7 @@ const initialRoleStatus = () => {
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   // TODO: data is expected to obtained from api endpoint
-  const [userData, setUserData] = useState(initialUserWithWalletStatus);
+  const [userData, setUserData] = useState(null);
   const [logout, setLogout] = useState(false)
   const [role, setRole] = useState(initialRoleStatus)
   const [walletAddress, setWalletAddress] = useState(null);
@@ -328,77 +268,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const handleLogin = () => {
-    const walletAdd = localStorage.getItem("walletAddress")
-    let x = localStorage.getItem("userType") 
-    if ( walletAdd === null && walletAddress !== null) {
-      localStorage.setItem("walletAddress", walletAddress)
-    }
-      getAccount(walletAdd).then(response=>{
-        
-      if (response.status === "successful") {
-        setIFPData(response)
-        if (x == null) {
-          localStorage.setItem("userType", "ifp") 
-        }
-        else{
-          setRole("ifp")
-        }
-        
-        window.location.href = "/ifps/dashboard";
-        return response;
-      }
-      else  {
-        console.log(response, "rsdecs")
-        if (x == null) {
-          localStorage.setItem("userType", "user") 
-        }
-        else{
-          setRole("user") 
-        }
-        
-        window.location.href = "/users/dashboard";
-      }
-    })
-  };
+
  
-  useEffect(() => {
-    initialUserWithWalletStatus
-  }, [userData])
-
-  // useEffect(() => {
-  //   getAccount().then(response=>console.log(response, "wdfdwgdf"))
-  // }, [])
-  
-
-  useEffect(() => {
-    console.log(role)
-    let x = localStorage.getItem("userType") 
-    // console.log(walletAddress)
-    getAccount(walletAddress).then(response=>{
-      console.log(response, "reres")
-      // to revert to User
-
-      // if (response.status === "successful") {
-      //   if (x !== null && x === "ifp") {
-      //     localStorage.setItem("userType", "user") 
-      //     console.log("You are now an IFP")
-      //     setRole("user")
-      //     window.location.href = "/users/dashboard";
-      //   }
-      // }
-      
-      if (response.status === "successful") {
-        setIFPData(response)
-        if (x !== null && x === "user") {
-          localStorage.setItem("userType", "ifp") 
-          console.log("You are now an IFP")
-          setRole("ifp")
-          window.location.href = "/ifps/dashboard";
-        }
-      }
-    })
-  }, [])
   
 
   
@@ -406,8 +277,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     <UserContext.Provider value={{
       userData, 
       setUserData, 
-      initialUserStatus,
-      handleLogin,
+
       walletAddress, 
       setWalletAddress, 
       walletVendor, 
@@ -420,7 +290,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       onboardIFP,
 
       role,
-      initialUserWithWalletStatus,
+      setRole,
       transactions,
       setTransactions,
       balances,
