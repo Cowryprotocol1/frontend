@@ -37,6 +37,8 @@ export type UserContextProps = {
   onboardIFP:any;
   postPaymentConfirmation: any;
   role: string;
+  getTransactionStatus: any;
+  
 
   getDepositIntentIFP: any;
   transactions: any; 
@@ -50,6 +52,7 @@ export type UserContextProps = {
   conversionOpen:any;
   setConversionOpen:React.Dispatch<React.SetStateAction<boolean>>;
   setRole:React.Dispatch<React.SetStateAction<string>>;
+
 };
 
 const UserContext = createContext<UserContextProps>({
@@ -65,6 +68,7 @@ const UserContext = createContext<UserContextProps>({
   onboardIFP:()=>null,
   role: "",
   getDepositIntentIFP:()=>null,
+  getTransactionStatus:()=>null,
 
   walletAddress: "",
   setWalletAddress: () => null,
@@ -269,6 +273,31 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
 
+
+  const getTransactionStatus = async (transactionId: string) => {
+    console.log(transactionId)
+    let transactionData = {
+      transactionId: transactionId,
+     
+    }
+    console.log(transactionData)
+    try {
+      const response = await fetch(`${url}/transactionStatus`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(transactionData),
+      })
+      let res = response.json()
+      console.log(res)
+      return res
+
+    } catch (error) {
+      console.log(error)
+      throw error;
+    }
+  };
  
   
 
@@ -307,7 +336,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       IFPData,
       setIFPData,
       getAccount,
-      getDepositIntentIFP 
+      getDepositIntentIFP,
+      getTransactionStatus,
     }}>
       {children}
     </UserContext.Provider>

@@ -13,6 +13,7 @@ import { useUser } from '@/store/user';
 import 'react-tooltip/dist/react-tooltip.css';
 import { Tooltip as ReactTooltip } from 'react-tooltip'
 
+
 type ConversionModalProps = {
   timer?: number;
   isOpen: boolean;
@@ -31,7 +32,7 @@ const ConversionModal: NextPageWithLayout<ConversionModalProps> = ({
   NGN=[],
   setModalOpen
 }) => {
-  const {walletAddress, getWithdrawalIntent, role, getTransactions, setTransactions, onboardIFP} =useUser();
+  const { walletAddress, getWithdrawalIntent, role, setRole, getTransactions, setTransactions, onboardIFP, getTransactionStatus} =useUser();
   const [isExpired, setIsExpired] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
@@ -47,6 +48,7 @@ const ConversionModal: NextPageWithLayout<ConversionModalProps> = ({
     bank_name: '',
     address: walletAddress
   });
+  const [userTxStatus, setUserTxStatus] = useState({}) //not in use yet
 
   const [copyData, setCopyData] = useState({
     staking_address: 'Copy',
@@ -128,7 +130,28 @@ const handleTooltip = (id:string)=>{
 }
 
 const handleConfirmation=()=>{
-  setPaymentMsg("You will be onboarded shortly after confirmation!")
+  // open up a loader here
+  setPaymentMsg("Checking...")
+
+  let transactionStatus = getTransactionStatus(conversionData?.memo)
+  transactionStatus.then((res: any) => {
+    console.log("response from server about transaction", res)
+    //handle switching user to an IFP account
+    if (res.status === "successful") {
+      setUserTxStatus(res)
+      localStorage.setItem("userType", "ifp")
+      setRole("ifp")
+      window.location.href = "/ifps/dashboard";
+      //this should refresh and load user as an IFP
+
+    }
+    else {
+      setUserTxStatus(res)
+      //pass
+    }
+  })
+
+  setPaymentMsg(userTxStatus['msg'])
 }
 const handleOnboarding =()=>{
   setIsLoading(true)
@@ -329,7 +352,7 @@ const handleOnboarding =()=>{
             
           </div>
         </div>
-        {paymentMsg !== "You will be onboarded shortly after confirmation!" &&
+        {paymentMsg !== "You will be onboard shortly after confirmation!" &&
         <div className="flex flex-row justify-center items-center my-1">
             <button 
               className="bg-brand_primary_green mt-2 ml-2 rounded px-4 py-2 text-xs text-white"
