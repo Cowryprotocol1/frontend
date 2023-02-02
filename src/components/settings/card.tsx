@@ -37,7 +37,7 @@ const SettingsCard: NextPageWithLayout<SettingsCardProps> = ({headerText,arr,chi
         lastname:'',
         bank: IFPData?.ifp_acct_name,
         phone:IFPData?.ifp_phone_name,
-        billingAddress:'',
+        billingAddress:IFPData?.ifp_acct_number,
         ifp_id:IFPData?.account_id,
         vendor:localStorage.getItem("vendor"),
         address:walletAddress,

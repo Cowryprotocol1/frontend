@@ -34,7 +34,7 @@ const profileArr =[
       id: 4,
       type:"text",
       name:"billingAddress",
-      placeholder:"Billing Address",
+      placeholder:"Fiat Account Number",
     },
     {
       id: 5,

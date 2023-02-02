@@ -12,7 +12,7 @@ import { currencyFormatter } from '@/pages/common/balanceboard';
 import { useUser } from '@/store/user';
 import 'react-tooltip/dist/react-tooltip.css';
 import { Tooltip as ReactTooltip } from 'react-tooltip'
-
+import { useRouter } from 'next/router';
 
 type ConversionModalProps = {
   timer?: number;
@@ -59,6 +59,7 @@ const ConversionModal: NextPageWithLayout<ConversionModalProps> = ({
     NGN: 'Copy'
   });
   
+  const {push} = useRouter();
   const mappable = [
     {
       id: 1,
@@ -141,7 +142,8 @@ const handleConfirmation=()=>{
       setUserTxStatus(res)
       localStorage.setItem("userType", "ifp")
       setRole("ifp")
-      window.location.href = "/ifps/dashboard";
+      push('/ifps/dashboard')
+      // window.location.href = "/ifps/dashboard";
       //this should refresh and load user as an IFP
 
     }

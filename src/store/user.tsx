@@ -199,7 +199,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       merchant_id: IFPData?.account_id,
 
     }
-    // console.log(wData)
+    console.log(wData)
     try {
       const response = await fetch(`${url}/merchants`, {
         method: 'POST',

@@ -26,7 +26,7 @@ export const redirectUrl = (url: string)=>{
 
 export default function HomePage() {
   const [availableVendors, setAvailableVendors] = useState(null)
-  const {setWalletAddress, getAccount, setIFPData, setRole} = useUser();
+  const {setWalletAddress, getAccount, setRole} = useUser();
   const [modalOpen, setModalOpen] = useState(false);
   const [showFirstModal, setShowFirstModal] = useState(false);
   const [modalList, setModalList] = useState(false);
@@ -80,9 +80,7 @@ export default function HomePage() {
 
 
           if (response.status === "successful") {
-            setIFPData(response)
             localStorage.setItem("userType", "ifp") 
-            setRole("ifp")
             window.location.href = "/ifps/dashboard";
 
           }

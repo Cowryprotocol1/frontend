@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { RxPlusCircled  } from 'react-icons/rx';
 
 import Layout from '@/components/layout/Layout';
@@ -12,10 +12,18 @@ type TopBarProps = {
 }
 
 const TopBar: NextPageWithLayout<TopBarProps> = ({username, role}) => {
+  const [hide, setHide] = useState("")
 const {conversionOpen, setConversionOpen, transactions, IFPData} = useUser();
 const pendingIFP = transactions?.filter(({merchant, transaction_status})=>merchant[0] !== null && IFPData !== null && merchant[0] === IFPData?.account_id &&  transaction_status === "pending")
+
+useEffect(() => {
+  if (role === "ifp" ) {
+    setHide("hidden")
+  }
+}, [role])
+
     // console.log(pendingIFP, "pendin")
-    // console.log(IFPData)
+    // console.log(role)
   return (
     <>
     <section className="hidden md:bg-white_day md:flex md:flex-row md:justify-between md:px-12 md:py-6 md:items-center md:shadow-[0px_1px_0px_rgba(0,0,0,0.1)] md:-mr-12 md:rounded-tl-3xl">
@@ -30,15 +38,15 @@ const pendingIFP = transactions?.filter(({merchant, transaction_status})=>mercha
         </div>
         }
 
-        {role === "ifp" ? null :
-        // <button className="bg-brand_primary_green rounded-xl h-12 text-white flex flex-row justify-between items-center px-12 text-sm">Top Up</button> : 
+
+      {/* <button className="bg-brand_primary_green rounded-xl h-12 text-white flex flex-row justify-between items-center px-12 text-sm">Top Up</button> :  */}
         <button 
-          className="bg-[#0D2A3B] rounded-xl h-12 text-white flex flex-row justify-between items-center px-4 text-sm"
+          className={`${hide} bg-[#0D2A3B] rounded-xl h-12 text-white flex flex-row justify-between items-center px-4 text-sm`}
           onClick={()=>setConversionOpen(true)}
         >
           <RxPlusCircled  size={25} className="mr-2"/> Become an IFP
         </button>
-        }
+
 
       </div>
 

@@ -6,7 +6,7 @@ import Layout from '@/components/layout/Layout';
 import TopBar from '@/components/layout/TopBar';
 import type { NextPageWithLayout } from "../_app";
 import { useUser } from "../../store/user";
-
+import { redirectUrl } from '..';
 type MainboardProps = {
   title: string;
   text?: string;
@@ -19,6 +19,7 @@ const Mainboard: NextPageWithLayout<MainboardProps> = ({title, text, children}) 
   const { 
     toggleLogoutMode, role, setRole, getTransactions, setTransactions,
     getBalance, setBalances , walletAddress, setWalletAddress,
+    getAccount, setIFPData
   } = useUser();
 
   useEffect(() => {
@@ -39,6 +40,15 @@ const Mainboard: NextPageWithLayout<MainboardProps> = ({title, text, children}) 
     g.then((res:any)=>{  
       setBalances(res.balances)
     })
+    if (x === 'ifp') {
+      getAccount(walletAddress).then(response=>{
+        setIFPData(response)
+        setRole("ifp");
+      })
+    }
+    else if (x === 'user') {
+      setRole("ifp");
+    }
   }, [])
 
 
