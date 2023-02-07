@@ -24,6 +24,8 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
   const [user, setUser] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [intentResult, setIntentResult] = useState(null);
+  
+
   const {transactions, IFPData, getDepositIntentIFP, getTransactions, role, walletAddress, setTransactions} = useUser();
 //   console.log(IFPData, "IFP  in transaction card")
     const handleTxnModal = (id:any)=>{
@@ -46,6 +48,11 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
             xdr: intentResult?.xdr,
             publicKey: walletAddress
         })
+        
+        if (signedXDR !== null){
+            handlegetDepositIntentIFP(modalData[0]?.id)
+
+        }
         console.log(signedXDR, "signedXDR")
  
     }
@@ -323,7 +330,7 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
         
     }
 
-        {modalData[0]?.merchant[0] === IFPData?.account_id && intentResult !== "Your deposit should reflect shortly!" &&
+        {modalData[0]?.merchant[0] === IFPData?.account_id && 
             <button 
                 className="mt-6 rounded-lg bg-brand_primary_blue py-4 px-8 text-xs text-white"
                 onClick={()=>handleSignDepositIFP()}
@@ -332,6 +339,7 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
             </button>
             
         }
+      
         
         </>
       }
