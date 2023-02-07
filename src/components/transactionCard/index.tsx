@@ -28,7 +28,7 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
   
 
   const {transactions, signXDR, IFPData,getBalance, getDepositIntentIFP, setBalances, getTransactions, role, walletAddress, setTransactions} = useUser();
-//   console.log(IFPData, "IFP  in transaction card")
+  console.log(IFPData, "IFP  in transaction card")
     const handleTxnModal = (id:any)=>{
         const txn = transactions.filter((txn:any)=>txn.id === id)
         setModalData(txn)
