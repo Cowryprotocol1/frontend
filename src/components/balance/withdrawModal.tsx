@@ -121,9 +121,6 @@ const handleCloseModal = ()=>{
     })
 }
 
-useEffect(() => {
-  console.log(withdrawData, "withdras")
-}, [])
 
 useEffect(() => {
   setForm({
@@ -148,7 +145,7 @@ const handleTooltip = (id:string)=>{
 const handleConfirmation=()=>{
   let transactionStatus = getTransactionStatus(withdrawData?.memo)
   transactionStatus.then((res: any) => {
-    console.log("response from server about transaction", res)
+    // console.log("response from server about transaction", res)
     //handle switching user to an IFP account
     if (res.status === "success") {
       setPaymentMsg(res.msg)

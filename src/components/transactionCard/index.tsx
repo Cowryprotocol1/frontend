@@ -37,7 +37,7 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
     const handlegetDepositIntentIFP =(txn_id: string)=>{
         setIsLoading(true)
         getDepositIntentIFP(txn_id).then(res=>{
-            console.log(res, "GET XDR")
+            // console.log(res, "GET XDR")
             setIntentResult(res)
             if(res.message == "ok" &&  res?.transaction_hash !== null){
                 setFinal(true)
