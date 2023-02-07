@@ -38,6 +38,7 @@ export type UserContextProps = {
   postPaymentConfirmation: any;
   role: string;
   getTransactionStatus: any;
+  signXDR: any;
   
 
   getDepositIntentIFP: any;
@@ -69,6 +70,7 @@ const UserContext = createContext<UserContextProps>({
   role: "",
   getDepositIntentIFP:()=>null,
   getTransactionStatus:()=>null,
+  signXDR:()=> null,
 
   walletAddress: "",
   setWalletAddress: () => null,
@@ -273,8 +275,35 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
 
+  
 
-  const getTransactionStatus = async (transactionId: string) => {
+  const signXDR = async (signed_xdr: string) => {
+    // console.log(transactionId)
+    let xdrData = {
+      signed_xdr: signed_xdr,
+     
+    }
+    // console.log(transactionData)
+    try {
+      const response = await fetch(`${url}/submit_xdr`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(xdrData),
+      })
+      let res = response.json()
+      console.log(res)
+      return res
+
+    } catch (error) {
+      console.log(error)
+      throw error;
+    }
+  };
+ 
+  
+const getTransactionStatus = async (transactionId: string) => {
     console.log(transactionId)
     let transactionData = {
       transactionId: transactionId,
@@ -298,9 +327,6 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       throw error;
     }
   };
- 
-  
-
   
   return (
     <UserContext.Provider value={{
@@ -317,7 +343,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       getTransactions,
       getBalance,
       onboardIFP,
-
+      signXDR,
       role,
       setRole,
       transactions,
