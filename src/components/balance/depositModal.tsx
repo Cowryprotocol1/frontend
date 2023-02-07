@@ -42,7 +42,7 @@ const DepositModal: NextPageWithLayout<DepositModalProps> = ({
     bank:'',
     description:''
   });
-  const {walletAddress, role, getDepositIntent, postPaymentConfirmation, getTransactions, setTransactions} =useUser();
+  const {walletAddress, role, getBalance, setBalances, getDepositIntent, postPaymentConfirmation, getTransactions, setTransactions} =useUser();
   const [copyData, setCopyData] = useState({
     account_number: 'Copy',
   });
@@ -107,8 +107,7 @@ const handleConfirmation=()=>{
     memo:depositData?.memo
   }
   // console.log(data, "payment details")
-  let z = postPaymentConfirmation(data)
-  z.then(res=>{
+  postPaymentConfirmation(data).then((res:any)=>{
     console.log(res, "payment confirmation")
     if (res?.error){
       if (typeof res?.error === "string") {
@@ -124,8 +123,7 @@ const handleConfirmation=()=>{
 
 const handleDepositIntent = ()=>{
   setIsLoading(true)
-  let g = getDepositIntent(form)
-  g.then(res=>{
+  getDepositIntent(form).then((res:any)=>{
     setIsLoading(false)
     if (res?.error){
       if (typeof res?.error === "string") {
@@ -138,7 +136,11 @@ const handleDepositIntent = ()=>{
       setDepositData(res)
       setNext(3)
     }
-  })
+  });
+  getBalance(walletAddress).then((res:any)=>{  
+    setBalances(res.balances)
+    })
+
 }
 const handleCloseModal = ()=>{
   setNext(1)

@@ -62,13 +62,13 @@ const Balanceboard: NextPageWithLayout<BalanceboardProps> = ({children}) => {
         </div>
       </div>
       <DepositModal 
-        timer={5}
+        timer={30}
         isOpen={depositOpen}
         NGN={NGN}
         setModalOpen={setDepositOpen}
       />
       <WithdrawModal 
-        timer={10}
+        timer={30}
         isOpen={withdrawOpen}
         NGN={NGN}
         setModalOpen={setWithdrawOpen}

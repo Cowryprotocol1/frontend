@@ -23,7 +23,7 @@ const CountdownTimer: NextPageWithLayout<CountdownTimerProps> = ({timer, setIsEx
         setIsExpired(true)
     }
   }, [countdown]);
-
+// console.log(countdown)
   const minutes = Math.floor(countdown/60);
   const seconds = Math.floor(countdown%60);
 

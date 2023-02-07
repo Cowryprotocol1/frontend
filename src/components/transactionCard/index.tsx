@@ -23,10 +23,11 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
   const [next, setNext] = useState(1);
   const [user, setUser] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [final, setFinal] = useState(false);
   const [intentResult, setIntentResult] = useState(null);
   
 
-  const {transactions, signXDR, IFPData, getDepositIntentIFP, getTransactions, role, walletAddress, setTransactions} = useUser();
+  const {transactions, signXDR, IFPData,getBalance, getDepositIntentIFP, setBalances, getTransactions, role, walletAddress, setTransactions} = useUser();
 //   console.log(IFPData, "IFP  in transaction card")
     const handleTxnModal = (id:any)=>{
         const txn = transactions.filter((txn:any)=>txn.id === id)
@@ -38,6 +39,13 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
         getDepositIntentIFP(txn_id).then(res=>{
             console.log(res, "GET XDR")
             setIntentResult(res)
+            if(res.message == "ok" &&  res?.transaction_hash !== null){
+                setFinal(true)
+            }
+            else if (res?.xdr !== null) {
+                setFinal(false)
+            }
+            
             setNext(2)
             setIsLoading(false)
         })
@@ -52,25 +60,28 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
         if (signedXDR !== null){
             signXDR(signedXDR).then(res=>{
                 if (res?.transaction_response?.memo){
+                    setFinal(true)
                     setIntentResult("Your wallet will be credited shortly!")
                 }
             })
             // handlegetDepositIntentIFP(modalData[0]?.id)
 
         }
-        console.log(signedXDR, "signedXDR")
+        // console.log(signedXDR, "signedXDR")
  
     }
     const handleCloseModal = ()=>{
         setModalOpen(false)
-      setIntentResult(null)
+        setIntentResult(null)
         setNext(1)
         setIsLoading(false)
-        let d = getTransactions(walletAddress , role)
-        d.then((res:any)=>{  
-          setTransactions(res.all_transactions)
+        getTransactions(walletAddress , role).then((res:any)=>{  
+            setTransactions(res.all_transactions)
         })
-      }
+        getBalance(walletAddress).then((res:any)=>{  
+        setBalances(res.balances)
+        })
+    }
     
   return (
     <div className="md:container md:mx-auto pb-4 overflow-auto h-[40vh]">
@@ -326,16 +337,17 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
             <textarea
                 disabled
                 className={`bg-transparent border-1 border-[#EDEDED] text-black w-full md:w-[85%] text-xs  font-thin rounded`}
-                rows={10}
+                rows={3}
                 value={intentResult?.transaction_hash }
             />
-            <p className="text-[9px] text-[#414141] absolute top-[-0.5rem] md:top-[-0.7rem] px-1 left-4 md:left-12 bg-white">Transaction XDR</p>
+            <p className="text-[9px] text-[#414141] absolute top-[-0.5rem] md:top-[-0.7rem] px-1 left-4 md:left-12 bg-white">Transaction Hash</p>
         </div>
         
         
     }
+    {/* {console.log(intentResult, "intentResult")} */}
 
-        {modalData[0]?.merchant[0] === IFPData?.account_id && intentResult !== "Your wallet will be credited shortly!" &&
+        {modalData[0]?.merchant[0] === IFPData?.account_id && !final  &&
             <button 
                 className="mt-6 rounded-lg bg-brand_primary_blue py-4 px-8 text-xs text-white"
                 onClick={()=>handleSignDepositIFP()}

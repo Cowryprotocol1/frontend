@@ -75,7 +75,7 @@ export default function HomePage() {
       .then(res=>{
         getAccount(localStorage.getItem("walletAddress")).then(response=>{
           // console.log(response, "rsdecs")
-          // // /////use to check for normal USER
+          ///use to check for normal USER
           // localStorage.setItem("userType", "user") 
           //   setRole("user")
           //   window.location.href = "/users/dashboard";

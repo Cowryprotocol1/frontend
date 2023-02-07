@@ -31,7 +31,7 @@ const WithdrawModal: NextPageWithLayout<WithdrawModalProps> = ({
   NGN,
   setModalOpen
 }) => {
-  const {walletAddress, getWithdrawalIntent, role, getTransactions, setTransactions, getTransactionStatus} =useUser();
+  const {walletAddress, getWithdrawalIntent, role,getBalance, setBalances, getTransactions, setTransactions, getTransactionStatus} =useUser();
   const [isExpired, setIsExpired] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
@@ -113,11 +113,17 @@ const handleCloseModal = ()=>{
   setModalOpen(false)
   setError("")
   setIsLoading(false)
-  let d = getTransactions(walletAddress , role)
-  d.then((res:any)=>{  
+  getTransactions(walletAddress , role).then((res:any)=>{  
     setTransactions(res.all_transactions)
   })
+  getBalance(walletAddress).then((res:any)=>{  
+    setBalances(res.balances)
+    })
 }
+
+useEffect(() => {
+  console.log(withdrawData, "withdras")
+}, [])
 
 useEffect(() => {
   setForm({
@@ -144,11 +150,11 @@ const handleConfirmation=()=>{
   transactionStatus.then((res: any) => {
     console.log("response from server about transaction", res)
     //handle switching user to an IFP account
-    if (res.status === "successful") {
-      setPaymentMsg("Withdrawal will be process shortly!")
+    if (res.status === "success") {
+      setPaymentMsg(res.msg)
     }
     else {
-      setPaymentMsg("OOPs! something went wrong")
+      setPaymentMsg(res.msg)
       //pass
     }
   })
@@ -345,7 +351,7 @@ const handleWithdrawIntent =()=>{
           {isExpired ? 
           <p className="font-thin text-xs text-red-400">Oops! You have to try again</p>
           :
-          paymentMsg !== "Withdrawal will be process shortly!" &&
+          paymentMsg !== "we are updating your balance right away" &&
           <>
             <button 
               className="border-brand_primary_green border mt-2 mr-2 rounded px-4 py-2 text-xs text-brand_primary_green"
@@ -362,7 +368,7 @@ const handleWithdrawIntent =()=>{
           </>
           }
         </div>
-          {paymentMsg !== "Withdrawal will be process shortly!" &&
+          {paymentMsg !== "we are updating your balance right away" &&
           <div className="flex flex-col justify-center items-center mt-2">
             <CountdownTimer  timer={timer} setIsExpired={setIsExpired}/>
             <p className="font-thin text-[9px] text-[#818181]">Transaction ETA</p>

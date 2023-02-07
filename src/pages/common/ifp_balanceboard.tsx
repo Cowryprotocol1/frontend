@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Text from '@/components/text';
 import Layout from '@/components/layout/Layout';
@@ -25,9 +25,12 @@ const IFPBalanceboard: NextPageWithLayout<IFPBalanceboardProps> = ({children}) =
   const balanceText: string = "NGN Balance";
   const balanceTextLicense: string = "NGNLICENSE Balance";
   const balanceTextAllow: string = "NGNALLOW Balance";
-  const {balances, depositOpen, setDepositOpen, withdrawOpen, setWithdrawOpen} =useUser();
+  const {balances, depositOpen, setDepositOpen, withdrawOpen, setWithdrawOpen, IFPData} =useUser();
 
   const [view, setView] = useState(true)
+
+ 
+  
   // console.log(balances)
   const NGN = balances?.filter((bal)=> bal.asset_code === "NGN")
   const NGNALLOW = balances?.filter((bal)=> bal.asset_code === "NGNALLOW")
