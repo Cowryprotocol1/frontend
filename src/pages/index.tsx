@@ -68,8 +68,10 @@ export default function HomePage() {
 
       await kit.setWallet(x)
       await kit.getPublicKey()
-      .then(res=>localStorage.setItem("walletAddress", res) )
-      .then(res=>setWalletAddress(localStorage.getItem("walletAddress")))
+      .then(res=>
+        localStorage.setItem("walletAddress", res) 
+        // localStorage.setItem("walletAddress", "GBZGNJFRXS2AQ6GQ2QNSRFTA54W6Z36KMTKSJ35GEWBXH4RWJLULLBVH") 
+        )
       .then(res=>{
         getAccount(localStorage.getItem("walletAddress")).then(response=>{
           // console.log(response, "rsdecs")

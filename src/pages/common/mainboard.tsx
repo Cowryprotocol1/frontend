@@ -18,7 +18,7 @@ const Mainboard: NextPageWithLayout<MainboardProps> = ({title, text, children}) 
   const [name, setName] = useState("")
   const { 
     toggleLogoutMode, role, setRole, getTransactions, setTransactions,
-    getBalance, setBalances , walletAddress, setWalletAddress,
+    getBalance, setBalances , setWalletAddress,
     getAccount, setIFPData
   } = useUser();
 

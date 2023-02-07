@@ -31,7 +31,7 @@ const WithdrawModal: NextPageWithLayout<WithdrawModalProps> = ({
   NGN,
   setModalOpen
 }) => {
-  const {walletAddress, getWithdrawalIntent, role, getTransactions, setTransactions} =useUser();
+  const {walletAddress, getWithdrawalIntent, role, getTransactions, setTransactions, getTransactionStatus} =useUser();
   const [isExpired, setIsExpired] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
@@ -140,7 +140,19 @@ const handleTooltip = (id:string)=>{
 }
 
 const handleConfirmation=()=>{
-  setPaymentMsg("Withdrawal will be process shortly!")
+  let transactionStatus = getTransactionStatus(withdrawData?.memo)
+  transactionStatus.then((res: any) => {
+    console.log("response from server about transaction", res)
+    //handle switching user to an IFP account
+    if (res.status === "successful") {
+      setPaymentMsg("Withdrawal will be process shortly!")
+    }
+    else {
+      setPaymentMsg("OOPs! something went wrong")
+      //pass
+    }
+  })
+  
 }
 const handleWithdrawIntent =()=>{
   let g = getWithdrawalIntent(form)

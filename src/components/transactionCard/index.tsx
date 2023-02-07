@@ -10,7 +10,9 @@ import { Dialog } from '@headlessui/react';
 import Image from 'next/image';
 import Logo from '../../../public/images/logo_c.png';
 import { currencyFormatter } from '@/pages/common/ifp_balanceboard';
-import {HiOutlineArrowSmLeft} from 'react-icons/hi'
+import {HiOutlineArrowSmLeft} from 'react-icons/hi';
+import { kit } from '@/store/wallet_connect';
+
 type TransactionCardProps = {
   children?: any;
 }
@@ -23,7 +25,7 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
   const [isLoading, setIsLoading] = useState(false);
   const [intentResult, setIntentResult] = useState(null);
   const {transactions, IFPData, getDepositIntentIFP, getTransactions, role, walletAddress, setTransactions} = useUser();
-  console.log(IFPData, "IFP  in transaction card")
+//   console.log(IFPData, "IFP  in transaction card")
     const handleTxnModal = (id:any)=>{
         const txn = transactions.filter((txn:any)=>txn.id === id)
         setModalData(txn)
@@ -32,11 +34,20 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
     const handlegetDepositIntentIFP =(txn_id: string)=>{
         setIsLoading(true)
         getDepositIntentIFP(txn_id).then(res=>{
-            console.log(res)
+            console.log(res, "GET XDR")
             setIntentResult(res)
             setNext(2)
             setIsLoading(false)
         })
+    }
+    const handleSignDepositIFP =async ()=>{
+        setIsLoading(true)
+        const {signedXDR} = await kit.sign({
+            xdr: intentResult?.xdr,
+            publicKey: walletAddress
+        })
+        console.log(signedXDR, "signedXDR")
+ 
     }
     const handleCloseModal = ()=>{
         setModalOpen(false)
@@ -268,7 +279,7 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
                     className="mt-6 rounded-lg bg-brand_primary_blue py-4 px-8 text-xs text-white"
                     onClick={()=>handlegetDepositIntentIFP(modalData[0]?.id)}
                 >
-                    {isLoading ? "Confirming..." : `Confirm ${currencyFormatter.format(modalData[0]?.transaction_amount)}`}
+                    {isLoading ? "Confirming..." : `Confirm1 ${currencyFormatter.format(modalData[0]?.transaction_amount)}`}
                 </button>
              
             }
@@ -282,7 +293,7 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
         intentResult!== null &&
         <>
         <Image src={Logo} alt="logo" className='w-[15%] mb-6 '/>
-        <p className="text-xs my-4 bg-[#E4F8EC] text-[#818181] p-2 rounded">{intentResult?.message}</p>
+        <p className="text-xs my-4 bg-[#E4F8EC] text-[#818181] p-2 rounded">{intentResult?.message ? intentResult?.message : intentResult}</p>
         { intentResult?.xdr && 
         
             <div className="w-[100%] relative mt-4 "> 
@@ -312,11 +323,10 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
         
     }
 
-        {modalData[0]?.merchant[0] === IFPData?.account_id &&
+        {modalData[0]?.merchant[0] === IFPData?.account_id && intentResult !== "Your deposit should reflect shortly!" &&
             <button 
                 className="mt-6 rounded-lg bg-brand_primary_blue py-4 px-8 text-xs text-white"
-                
-                onClick={()=>handlegetDepositIntentIFP(modalData[0]?.id)}
+                onClick={()=>handleSignDepositIFP()}
             >
                 {isLoading ? "Signing Transaction..." : `Sign Transaction for ${currencyFormatter.format(modalData[0]?.transaction_amount)}`}
             </button>
