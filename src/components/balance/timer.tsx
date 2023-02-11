@@ -29,7 +29,7 @@ const CountdownTimer: NextPageWithLayout<CountdownTimerProps> = ({timer, setIsEx
 
   return (
       <div className="bg-[#EBA352] h-[50px] w-[50px] rounded-full flex flex-col justify-center items-center">
-          <h2 className="text-xs font-thin text-white">0{minutes}:{seconds < 10 ?"0"+seconds: seconds}</h2>
+          <h2 className="text-xs font-thin text-white">{minutes}:{seconds < 10 ?"0"+seconds: seconds}</h2>
       </div>
   );
 }

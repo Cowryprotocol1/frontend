@@ -11,6 +11,7 @@ const nextConfig = {
   images: {
     domains: [
       'picsum.photos',
+      'id.lobstr.co'
     ],
   },
 

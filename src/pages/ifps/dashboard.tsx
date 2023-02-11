@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import { IoIosArrowBack }  from 'react-icons/io';
-import Mainboard from '@/pages/common/mainboard';
+import Mainboard from '@/pages/common/mainboardIFP';
 import IFPBalanceboard from '../common/ifp_balanceboard';
 import Transaction from '../common/transactions';
 

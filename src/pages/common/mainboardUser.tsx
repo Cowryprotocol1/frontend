@@ -1,7 +1,8 @@
 
 import React, {useEffect,useState} from 'react';
 
-import Header from '@/components/layout/Header';
+// import Header from '@/components/layout/Header';
+import Header from '@/components/layout/userHeader';
 import Layout from '@/components/layout/Layout';
 import TopBar from '@/components/layout/TopBar';
 import type { NextPageWithLayout } from "../_app";
@@ -42,12 +43,13 @@ const Mainboard: NextPageWithLayout<MainboardProps> = ({title, text, children}) 
     })
     if (x === 'ifp') {
       getAccount(walletAddress).then(response=>{
+        // console.log(response, "get account api")
         setIFPData(response)
         setRole("ifp");
       })
     }
     else if (x === 'user') {
-      setRole("ifp");
+      setRole("user");
     }
   }, [])
 

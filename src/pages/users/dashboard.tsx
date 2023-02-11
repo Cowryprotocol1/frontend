@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 
-import Mainboard from '@/pages/common/mainboard';
+// import Mainboard from '@/pages/common/mainboard';
+import Mainboard from '@/pages/common/mainboardUser';
 import Balanceboard from '../common/balanceboard';
 import Transactionboard from '../common/transactionboard';
 import Transaction from '../common/transactions';

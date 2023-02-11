@@ -38,7 +38,7 @@ const WithdrawModal: NextPageWithLayout<WithdrawModalProps> = ({
   const [next, setNext] = useState(1);
   const [withdrawData, setWithdrawData] = useState(null)
   const [paymentMsg, setPaymentMsg] = useState("")
-
+  const [errorAsset, setErrorAsset] = useState([])
   const [form, setForm] = useState({
     address: walletAddress,
     amount:'',
@@ -163,8 +163,11 @@ const handleWithdrawIntent =()=>{
     setIsLoading(false)
     if (res?.error){
       if (typeof res?.error === "string") {
-        setError("Oops! something went wrong")
+        setError(res?.error)
         console.log(res)
+      }
+      if (res?.assets){
+        setErrorAsset(res?.assets)
       }
     }
     else{
@@ -205,7 +208,14 @@ const handleWithdrawIntent =()=>{
           />
         </div>
       </Dialog.Title>
-      {error !== "" && <p className="text-xs rounded  my-2 p-1 text-center bg-[#FBE1E1] text-[#E50808]">{error}</p>}
+      {error !== "" && <p className="text-xs rounded  my-2 p-1 text-center bg-[#FBE1E1] text-[#E50808]">{error}
+      {errorAsset.length > 0 && errorAsset.map(({code, issuer})=>{
+        return (<div className="flex flex-row items-center mt-4">
+          <p className="text-xs text-[#E50808] ml-4">{code}: </p>
+          <input className="text-xs text-[#E50808] w-[85%] p-4 bg-transparent" disabled value={issuer}/>
+        </div>)
+      })}
+      </p>}
       <div className="flex flex-col items-center gap-4 mt-4  w-[100%]">
         { next ===  1 && mappable.map(({type, placeholder,name, value, id})=>{
           return (
@@ -218,12 +228,12 @@ const handleWithdrawIntent =()=>{
               value={value}
               maxLength={name === "account_number" ? 10 : 100}
               onChange={handleChange}
-              className={`bg-transparent border-1 h-[45px] ${name ==="amount" && parseFloat(NGN[0]?.balance) < parseFloat(form.amount)? "focus:border-[#E50808] border-[#E50808]" : "border-[#EDEDED]"} text-black w-full md:w-[85%] text-xs  font-thin rounded`}
+              className={`bg-transparent border-1 h-[45px] ${name ==="amount" && NGN?.length > 0 && parseFloat(NGN[0]?.balance) < parseFloat(form.amount)? "focus:border-[#E50808] border-[#E50808]" : "border-[#EDEDED]"} text-black w-full md:w-[85%] text-xs  font-thin rounded`}
             />
             <p className="text-[9px] text-[#414141] absolute top-[-0.5rem] md:top-[-0.7rem] px-1 left-4 md:left-12 bg-white">{placeholder}</p>
             {name === "amount" &&
             <p className="text-[9px] text-[#414141]  px-1 text-right mr-8 mb-[-1rem] bg-white">
-              Wallet balance:{NGN.length > 0 ? <span className="text-brand_primary_green">
+              Wallet balance:{NGN?.length > 0 ? <span className="text-brand_primary_green">
               {currencyFormatter.format(NGN[0]?.balance)}
               </span>
             :" ₦0.00"}</p>
@@ -239,7 +249,15 @@ const handleWithdrawIntent =()=>{
           
           <div className="flex flex-row justify-between items-center my-2">
             <p className=" text-xs font-thin text-[#414141]">Transaction Amount</p>
-            <p className=" text-xs font-medium">{currencyFormatter.format(parseFloat(form?.amount)|| 0.00)}</p>
+            <p className=" text-xs font-thin">{currencyFormatter.format(parseFloat(form?.amount)|| 0.00)}</p>
+          </div>
+          <div className="flex flex-row justify-between items-center my-2">
+            <p className=" text-xs font-thin text-[#414141]">Transaction fees</p>
+            <p className=" text-xs font-thin">{currencyFormatter.format(200)}</p>
+          </div>
+          <div className="flex flex-row justify-between items-center my-2">
+            <p className=" text-xs font-thin text-[#414141]">Total Withrawable</p>
+            <p className=" text-xs font-medium">{currencyFormatter.format(parseFloat(form?.amount) + 200)}</p>
           </div>
           <div className="flex flex-row justify-between items-center my-2">
             <p className=" text-xs font-thin text-[#414141]">Account Number</p>
@@ -261,8 +279,8 @@ const handleWithdrawIntent =()=>{
       {next !== 3 &&
         <>
         <button 
-        className={`${parseFloat(NGN[0]?.balance) < parseFloat(form.amount) || form.bank === '' || form.account_name === '' || form.account_number === '' || form.account_number.length < 10 || form.phone === '' || form.description === '' ? "bg-gray-300 text-black" :"bg-brand_primary_green mt-4 text-white"} rounded px-4 py-2 text-xs`}
-        disabled={parseFloat(NGN[0]?.balance) < parseFloat(form.amount) || form.bank === '' || form.account_name === '' || form.account_number === '' || form.account_number.length < 10 || form.phone === '' || form.description === '' ? true: false}
+        className={`${NGN?.length > 0 && parseFloat(NGN[0]?.balance) < parseFloat(form.amount) || form.bank === '' || form.account_name === '' || form.account_number === '' || form.account_number.length < 10 || form.phone === '' || form.description === '' || form.amount === '' ? "bg-gray-300 text-black" :"bg-brand_primary_green mt-4 text-white"} rounded px-4 py-2 text-xs`}
+        disabled={NGN?.length > 0 && parseFloat(NGN[0]?.balance) < parseFloat(form.amount) || form.bank === '' || form.account_name === '' || form.account_number === '' || form.account_number.length < 10 || form.phone === '' || form.description === '' || form.amount === '' ? true: false}
         onClick={()=>{
           if (next === 1){
             setNext(2)
@@ -274,7 +292,7 @@ const handleWithdrawIntent =()=>{
           {next === 2 && !isLoading && "Confirm Withdrawal"}
           {next === 2 && isLoading && "Confirming..."}
         </button>
-        {parseFloat(NGN[0]?.balance) >= parseFloat(form.amount) &&
+        {NGN?.length > 0 && parseFloat(NGN[0]?.balance) >= parseFloat(form.amount) &&
         <p className="font-thin text-xs text-[#818181]">You will receive <span className="text-brand_primary_green">{currencyFormatter.format(parseFloat(form.amount))}</span> into your fiat account </p>
         }
         </>
@@ -288,12 +306,18 @@ const handleWithdrawIntent =()=>{
             <p className="text-xs my-2 bg-[#E4F8EC] text-[#818181] p-2 rounded">{withdrawData?.message}</p>
           }
           <div className="flex flex-col justify-center items-center my-1">
-            <p className=" text-xs font-thin text-[#414141]">Transaction Amount</p>
-            <p className=" text-lg font-medium">{currencyFormatter.format((withdrawData?.user_details?.amount))}</p>
-            <p className="font-thin text-[9px] text-[#818181]">Transaction fee: <span className="text-brand_primary_green">{currencyFormatter.format(withdrawData?.user_details?.expected_amount_with_fee - withdrawData?.user_details?.amount)}</span></p>
+            <p className=" text-xs font-thin text-[#414141]">Total Withdrawable Amount</p>
+            <p className=" text-lg font-medium">{currencyFormatter.format((withdrawData?.user_details?.expected_amount_with_fee || 0))}</p>
+            <div className="flex flex-row justify-center items-center">
+              <p className=" mr-2 font-thin text-[9px] text-[#818181]">Amount: <span className="text-brand_primary_green">{currencyFormatter.format((withdrawData?.user_details?.amount || 0))}</span></p> 
+              <span className="text-[#818181] text-xs">|</span>
+              <p className=" ml-2 font-thin text-[9px] text-[#818181]">Transaction fee: <span className="text-brand_primary_green">{currencyFormatter.format(withdrawData?.user_details?.expected_amount_with_fee - withdrawData?.user_details?.amount || 0)}</span></p>
+            </div>
+
           </div>
+   
           <div className="flex flex-row justify-between items-center my-2">
-            <p className=" text-xs font-thin text-[#414141]">Staking Address</p>
+            <p className=" text-xs font-thin text-[#414141]">Withdrawal Address</p>
             <p className=" text-xs font-medium flex flex-row items-center">
               <FiCopy id="blockchain_address" data-tooltip-content={copyData?.blockchain_address} 
                 onClick={()=>{
@@ -365,7 +389,7 @@ const handleWithdrawIntent =()=>{
           </>
           }
         </div>
-          {paymentMsg !== "we are updating your balance right away" &&
+          {paymentMsg !== "we are updating your balance right away" && !isExpired &&
           <div className="flex flex-col justify-center items-center mt-2">
             <CountdownTimer  timer={timer} setIsExpired={setIsExpired}/>
             <p className="font-thin text-[9px] text-[#818181]">Transaction ETA</p>

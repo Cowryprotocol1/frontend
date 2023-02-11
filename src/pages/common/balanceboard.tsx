@@ -43,7 +43,7 @@ const Balanceboard: NextPageWithLayout<BalanceboardProps> = ({children}) => {
               <RiBankFill  size={25} className=" text-brand_primary_green"/>
             </div>
             <div>
-              {NGN.length > 0 ? 
+              {NGN?.length > 0 ? 
               <Text className="font-bold text-xl">{view ? currencyFormatter.format(NGN[0]?.balance) : "******"}</Text>
               :
               <Text className="font-bold text-xl">{view ? "₦ 0.00" : "******"}</Text>

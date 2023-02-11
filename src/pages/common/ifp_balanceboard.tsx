@@ -60,7 +60,7 @@ const IFPBalanceboard: NextPageWithLayout<IFPBalanceboardProps> = ({children}) =
               <RiBankFill  size={25} className=" text-brand_primary_blue"/>
             </div>
             <div>
-              {NGN.length > 0 ? 
+              {NGN?.length > 0 ? 
               <Text className="font-bold text-lg">{view ? currencyFormatter.format(NGN[0]?.balance) : "******"}</Text>
               :
               <Text className="font-bold text-lg">{view ? "₦ 0.00" : "******"}</Text>

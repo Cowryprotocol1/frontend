@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PaymentCard from '@/components/paymentCard';
-import Mainboard from '@/pages/common/mainboard';
+import Mainboard from '@/pages/common/mainboardUser';
 import  { HiPlusSm } from 'react-icons/hi';
 import WhiteModal from '@/components/modal/whitemodal';
 import { Dialog } from '@headlessui/react';

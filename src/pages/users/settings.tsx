@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Mainboard from '@/pages/common/mainboard';
+import Mainboard from '@/pages/common/mainboardUser';
 import Settingboard from '../common/settings';
 
 function Settings() {

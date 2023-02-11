@@ -32,6 +32,7 @@ const DepositModal: NextPageWithLayout<DepositModalProps> = ({
   const [isExpired, setIsExpired] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
+  const [errorAsset, setErrorAsset] = useState([])
   const [next, setNext] = useState(1);
   const [depositData, setDepositData] = useState(null)
   
@@ -111,7 +112,7 @@ const handleConfirmation=()=>{
     console.log(res, "payment confirmation")
     if (res?.error){
       if (typeof res?.error === "string") {
-        setError("Oops! something went wrong")
+        setError(res?.error)
         console.log(res)
       }
     }
@@ -122,13 +123,18 @@ const handleConfirmation=()=>{
 }
 
 const handleDepositIntent = ()=>{
+  setError("")
+  setErrorAsset([])
   setIsLoading(true)
   getDepositIntent(form).then((res:any)=>{
     setIsLoading(false)
     if (res?.error){
       if (typeof res?.error === "string") {
-        setError("Oops! something went wrong")
+        setError(res?.error)
         console.log(res)
+      }
+      if (res?.assets){
+        setErrorAsset(res?.assets)
       }
     }
     else{
@@ -188,7 +194,14 @@ useEffect(() => {
           />
         </div>
       </Dialog.Title>
-      {error !== "" && <p className="text-xs rounded  my-2 p-1 text-center bg-[#FBE1E1] text-[#E50808]">{error}</p>}
+      {error !== "" && <p className="text-xs rounded  my-2 p-1 text-center bg-[#FBE1E1] text-[#E50808]">{error}
+      {errorAsset.length > 0 && errorAsset.map(({code, issuer})=>{
+        return (<div className="flex flex-row items-center mt-4">
+          <p className="text-xs text-[#E50808] ml-4">{code}: </p>
+          <input className="text-xs text-[#E50808] w-[85%] p-4 bg-transparent" disabled value={issuer}/>
+        </div>)
+      })}
+      </p>}
       <div className="flex flex-col items-center gap-4 mt-4  w-[100%]">
         { next ===  1 && mappable.map(({type, placeholder,name, value, id})=>{
           return (
@@ -221,7 +234,15 @@ useEffect(() => {
             <p className=" text-xs font-thin">{currencyFormatter.format(parseFloat(form?.amount)|| 0.00)}</p>
           </div>
           <div className="flex flex-row justify-between items-center my-2">
-            <p className=" text-xs font-thin text-[#414141]">Address to Credit</p>
+            <p className=" text-xs font-thin text-[#414141]">Transaction fees</p>
+            <p className=" text-xs font-thin">{currencyFormatter.format(200)}</p>
+          </div>
+          <div className="flex flex-row justify-between items-center my-2">
+            <p className=" text-xs font-thin text-[#414141]">Total Payable</p>
+            <p className=" text-xs font-medium">{currencyFormatter.format(parseFloat(form?.amount) + 200)}</p>
+          </div>
+          <div className="flex flex-row justify-between items-center my-2">
+            <p className=" text-xs font-thin text-[#414141]">Wallet Address to Credit</p>
             <p className=" text-xs font-thin text-brand_primary_green">{walletAddress?.substring(0, 5)}...{walletAddress?.substring(walletAddress?.length - 4)}</p>
           </div>
           <div className="flex flex-row justify-between items-center my-2">
@@ -256,7 +277,7 @@ useEffect(() => {
           {next === 2 && !isLoading && "Confirm Deposit"}
           {next === 2 && isLoading && "Confirming..."}
         </button>
-        {parseFloat(NGN[0]?.balance) >= parseFloat(form.amount) &&
+        {NGN?.length > 0 && parseFloat(NGN[0]?.balance) >= parseFloat(form.amount) &&
         <p className="font-thin text-xs text-[#818181]">You will receive <span className="text-brand_primary_green">{currencyFormatter.format(parseFloat(form.amount))}</span> in your cowry protocol account </p>
         }
         </>
@@ -270,9 +291,14 @@ useEffect(() => {
             <p className="text-xs my-2 bg-[#E4F8EC] text-[#818181] p-2 rounded">{depositData?.message}</p>
           }
           <div className="flex flex-col justify-center items-center my-1">
-            <p className=" text-xs font-thin text-[#414141]">Transaction Amount</p>
-            <p className=" text-lg font-medium">{currencyFormatter.format((depositData?.amount))}</p>
-            <p className="font-thin text-[9px] text-[#818181]">Transaction fee: <span className="text-brand_primary_green">{currencyFormatter.format((parseFloat(depositData?.fee)))}</span></p>
+            <p className=" text-xs font-thin text-[#414141]">Total Payable Amount</p>
+            <p className=" text-lg font-medium">{currencyFormatter.format((depositData?.amount_to_pay || 0))}</p>
+            <div className="flex flex-row justify-center items-center">
+              <p className=" mr-2 font-thin text-[9px] text-[#818181]">Amount: <span className="text-brand_primary_green">{currencyFormatter.format((parseFloat(depositData?.amount)|| 0))}</span></p> 
+              <span className="text-[#818181] text-xs">|</span>
+              <p className=" ml-2 font-thin text-[9px] text-[#818181]">Transaction fee: <span className="text-brand_primary_green">{currencyFormatter.format((parseFloat(depositData?.fee)|| 0))}</span></p>
+            </div>
+
           </div>
           <div className="flex flex-row justify-between items-center my-1">
             <p className=" text-xs font-thin text-[#414141]">IFP Account No</p>
@@ -325,7 +351,7 @@ useEffect(() => {
             
           }
         </div>
-        {paymentMsg === "" &&
+        {paymentMsg === "" && !isExpired &&
         <div className="flex flex-col justify-center items-center mt-2">
           <CountdownTimer  timer={timer} setIsExpired={setIsExpired}/>
           <p className="font-thin text-[9px] text-[#818181]">Transaction ETA</p>

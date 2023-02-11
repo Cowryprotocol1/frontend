@@ -2,7 +2,7 @@
 import React, {useEffect,useState} from 'react';
 import Image from 'next/image';
 import Text from '@/components/text';
-import Header from '@/components/layout/Header';
+import Header from '@/components/layout/IFPHeader';
 import Layout from '@/components/layout/Layout';
 import TopBar from '@/components/layout/TopBar';
 import { useRouter } from 'next/router';
