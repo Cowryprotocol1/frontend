@@ -7,7 +7,7 @@ type ModalProps = {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function Modal({ children, isOpen, setIsOpen }: ModalProps) {
+function Modal({ children, isOpen, setIsOpen }: ModalProps) {
   function closeModal() {
     setIsOpen(false);
   }
@@ -50,3 +50,5 @@ export default function Modal({ children, isOpen, setIsOpen }: ModalProps) {
     </>
   );
 }
+
+export default React.memo(Modal)

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import Layout from '@/components/layout/Layout';
 import type { NextPageWithLayout } from "../../pages/_app";
 import Image from 'next/image';
@@ -7,8 +7,7 @@ import { Dialog } from '@headlessui/react';
 import { HiOutlineArrowSmLeft} from 'react-icons/hi';
 import {FiCopy} from 'react-icons/fi';
 import Conversion from '../../../public/images/conversion_ifp.png';
-import CountdownTimer from '@/components/balance/timer';
-import { currencyFormatter } from '@/pages/common/balanceboard';
+
 import { useUser } from '@/store/user';
 import 'react-tooltip/dist/react-tooltip.css';
 import { Tooltip as ReactTooltip } from 'react-tooltip'
@@ -27,13 +26,10 @@ export const copyToClipboard = (text: string)=>{
 
 
 const ConversionModal: NextPageWithLayout<ConversionModalProps> = ({
-  timer, 
   isOpen, 
-  NGN=[],
   setModalOpen
 }) => {
-  const { walletAddress, getWithdrawalIntent, role, setRole, getTransactions, setTransactions, onboardIFP, getTransactionStatus} =useUser();
-  const [isExpired, setIsExpired] = useState(false)
+  const { walletAddress,role, setRole, getTransactions, setTransactions, onboardIFP, getTransactionStatus} =useUser();
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
   const [next, setNext] = useState(1);
@@ -374,4 +370,4 @@ const handleOnboarding =()=>{
 
 ConversionModal.getLayout = (page) => <Layout>{page}</Layout>;
 
-export default ConversionModal;
+export default React.memo(ConversionModal);

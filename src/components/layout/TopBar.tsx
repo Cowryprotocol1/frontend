@@ -5,15 +5,16 @@ import Layout from '@/components/layout/Layout';
 import { useUser } from '@/store/user';
 import type { NextPageWithLayout } from "../../pages/_app";
 import ConversionModal from './conversionModal';
-import {BsBell}  from 'react-icons/bs'
+import {BsBell}  from 'react-icons/bs';
+import { RiLogoutCircleLine } from 'react-icons/ri';
 type TopBarProps = {
   username: string;
   role: string;
-}
+}  
 
 const TopBar: NextPageWithLayout<TopBarProps> = ({username, role}) => {
   const [hide, setHide] = useState("")
-const {conversionOpen, setConversionOpen, transactions, IFPData} = useUser();
+const {conversionOpen, setConversionOpen, transactions, IFPData, toggleLogoutMode} = useUser();
 const pendingIFP = transactions?.filter(({merchant, transaction_status})=>merchant[0] !== null && IFPData !== null && merchant[0] === IFPData?.account_id &&  transaction_status === "pending")
 
 useEffect(() => {
@@ -47,7 +48,7 @@ useEffect(() => {
           <RxPlusCircled  size={25} className="mr-2"/> Become an IFP
         </button>
 
-
+        <span className="ml-10 cursor-pointer" onClick={toggleLogoutMode}><RiLogoutCircleLine className="text-red-500"/></span>
       </div>
 
       
@@ -63,4 +64,4 @@ useEffect(() => {
 
 TopBar.getLayout = (page) => <Layout>{page}</Layout>;
 
-export default TopBar;
+export default React.memo(TopBar);

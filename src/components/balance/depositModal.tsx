@@ -367,4 +367,4 @@ useEffect(() => {
 
 DepositModal.getLayout = (page) => <Layout>{page}</Layout>;
 
-export default DepositModal;
+export default React.memo(DepositModal);

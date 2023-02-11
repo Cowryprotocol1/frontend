@@ -1,5 +1,5 @@
 
-import React, {useEffect,useState} from 'react';
+import React from 'react';
 import Layout from '@/components/layout/Layout';
 import {  HiMinusCircle } from 'react-icons/hi2';
 import { RiBankFill } from 'react-icons/ri';
@@ -12,8 +12,7 @@ type PaymentCardProps = {
 }
 
 const PaymentCard: NextPageWithLayout<PaymentCardProps> = ({handleRemovePayment, setAccountID,children}) => {
-  const headerText: string = "Transaction Overview";
-  const balanceText: string = "147";
+
   const removeID = "1"
   return (
     <div className="w-full h-[auto] p-4 mb-6 flex flex-row justify-between rounded-xl bg-white  shadow-[0px_1px_0px_rgba(0,0,0,0.1)]">
@@ -44,4 +43,4 @@ const PaymentCard: NextPageWithLayout<PaymentCardProps> = ({handleRemovePayment,
 
 PaymentCard.getLayout = (page) => <Layout>{page}</Layout>;
 
-export default PaymentCard;
+export default React.memo(PaymentCard);

@@ -22,4 +22,4 @@ const Discord: NextPageWithLayout<DiscordProps> = ({link}) => {
 
 Discord.getLayout = (page) => <Layout>{page}</Layout>;
 
-export default Discord;
+export default React.memo(Discord);

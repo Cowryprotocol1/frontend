@@ -1,10 +1,11 @@
 
-import React, {useEffect,useState} from 'react';
+import React, {useState} from 'react';
 import Image from 'next/image';
 import Layout from '@/components/layout/Layout';
 import TransactionCard from '@/components/transactionCard';
 import type { NextPageWithLayout } from "../_app";
 import  { RiRefreshLine } from 'react-icons/ri';
+import {BsArrowUpRightSquareFill, BsArrowDownRightSquareFill} from 'react-icons/bs';
 import WhiteModal from '@/components/modal/whitemodal';
 import { Dialog } from '@headlessui/react';
 import LogoC from '../../../public/images/logo_c.png';
@@ -57,9 +58,10 @@ const Transaction: NextPageWithLayout<TransactionProps> = ({setIsTxn, isTxn,chil
             <option>30 days</option>
             <option>60 days</option>
           </select>
+          <BsArrowDownRightSquareFill className="text-[#818181] cursor-pointer" onClick={()=>setIsTxn(!isTxn)}/>
           </>
         :
-          <p onClick={()=>setIsTxn(!isTxn)} className='font-thin text-[#414141] hidden cursor-pointer  md:block'>{nextText}</p>
+          <BsArrowUpRightSquareFill className="text-[#414141] cursor-pointer hidden md:block" onClick={()=>setIsTxn(!isTxn)}/>
         }
       </div>
        }
@@ -115,4 +117,4 @@ const Transaction: NextPageWithLayout<TransactionProps> = ({setIsTxn, isTxn,chil
 
 Transaction.getLayout = (page) => <Layout>{page}</Layout>;
 
-export default Transaction;
+export default React.memo(Transaction);

@@ -1,6 +1,5 @@
 import Image from 'next/image';
 import React, { useEffect,useState } from 'react';
-import { CgMenuLeftAlt } from 'react-icons/cg';
 import { SlClose } from 'react-icons/sl';
 import Hamburger from '../../../public/images/hamburger_grey.png'
 import HeaderButton from '@/components/links/Headerbutton';
@@ -8,7 +7,7 @@ import Avatar from '../icons/avatar';
 import Text from '../text';
 import PassBg from '../../../public/images/pass_back.png'
 import { useUser } from '@/store/user';
-import ConversionModal from './conversionModal';
+
 
 type MobileHeaderProps = {
   alt: string;
@@ -18,7 +17,7 @@ type MobileHeaderProps = {
   handleLogOut: any;
 }
 
-export default function MobileHeader({ alt, image, route, handleLogOut, walletAddress }: MobileHeaderProps) {
+function MobileHeader({ alt, image, route, handleLogOut, walletAddress }: MobileHeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   
@@ -127,3 +126,4 @@ export default function MobileHeader({ alt, image, route, handleLogOut, walletAd
   );
 }
 
+export default React.memo(MobileHeader);

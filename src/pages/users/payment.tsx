@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import PaymentCard from '@/components/paymentCard';
 import Mainboard from '@/pages/common/mainboardUser';
 import  { HiPlusSm } from 'react-icons/hi';
@@ -68,10 +68,14 @@ function Payment() {
     setModalType("")
     setModalOpen(false)
   }
-  const handleRemovePayment = ()=>{
-    setModalType("remove")
-    setModalOpen(true)
-  }
+  const handleRemovePayment = useCallback(
+    () => {
+        setModalType("remove")
+        setModalOpen(true)
+    },
+    [],
+  )
+  
   return (
     <div>
       <Mainboard title={paymentData.title}>

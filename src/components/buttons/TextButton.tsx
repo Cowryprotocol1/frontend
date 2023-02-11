@@ -52,4 +52,4 @@ const TextButton = React.forwardRef<HTMLButtonElement, TextButtonProps>(
   }
 );
 
-export default TextButton;
+export default React.memo(TextButton);

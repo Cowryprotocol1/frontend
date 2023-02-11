@@ -1,15 +1,11 @@
 
-import React, {useEffect,useState} from 'react';
-import Image from 'next/image';
+import React, {useMemo} from 'react';
 import Text from '@/components/text';
-import Header from '@/components/layout/IFPHeader';
 import Layout from '@/components/layout/Layout';
-import TopBar from '@/components/layout/TopBar';
-import { useRouter } from 'next/router';
+
 import type { NextPageWithLayout } from "../_app";
 import { useUser } from "../../store/user";
-import {  RiBankFill } from 'react-icons/ri';
-import BImage from '../../../public/images/balance_image.png'
+
 import Donut from '@/components/donut';
 import { MdOutlineDonutLarge } from 'react-icons/md';
 
@@ -20,7 +16,7 @@ type TransactionboardProps = {
 const Transactionboard: NextPageWithLayout<TransactionboardProps> = ({children}) => {
   const headerText: string = "Transaction Overview";
   const {transactions} = useUser();
-  const total: number = transactions?.filter((txn)=> txn).length
+  const total: number = useMemo(() => transactions?.filter((txn)=> txn).length, [transactions])
   // console.log(transactions)
   
   return (
@@ -45,4 +41,4 @@ const Transactionboard: NextPageWithLayout<TransactionboardProps> = ({children})
 
 Transactionboard.getLayout = (page) => <Layout>{page}</Layout>;
 
-export default Transactionboard;
+export default React.memo(Transactionboard);

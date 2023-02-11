@@ -41,4 +41,4 @@ const HeaderButton: React.FC<HeaderButtonProps> = ({ href, text, activeBg, activ
   )
 }
 
-export default HeaderButton;
+export default React.memo(HeaderButton);

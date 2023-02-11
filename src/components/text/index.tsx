@@ -37,4 +37,4 @@ export function Text({ children, intent, avatar, className }: Props) {
   );
 }
 
-export default Text;
+export default React.memo(Text);

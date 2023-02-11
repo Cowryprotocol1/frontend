@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect,useState } from "react";
+import React, { createContext, useContext, useEffect,useState, useCallback } from "react";
 
 import { User } from "@/constant/dummydata";
 
@@ -304,12 +304,12 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
  
   
 const getTransactionStatus = async (transactionId: string) => {
-    console.log(transactionId)
+    // console.log(transactionId)
     let transactionData = {
       transactionId: transactionId,
      
     }
-    console.log(transactionData)
+    // console.log(transactionData)
     try {
       const response = await fetch(`${url}/transactionStatus`, {
         method: 'POST',
@@ -319,7 +319,7 @@ const getTransactionStatus = async (transactionId: string) => {
         body: JSON.stringify(transactionData),
       })
       let res = response.json()
-      console.log(res)
+      // console.log(res)
       return res
 
     } catch (error) {

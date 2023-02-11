@@ -1,15 +1,16 @@
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
 import { useUser } from "../../store/user";
+import React, {useMemo} from 'react';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
  
 const Donut: React.FC = () => {
     const {transactions} = useUser();
-    const completed = transactions.filter((txn)=> txn.transaction_status === "completed").length
-    const processing = transactions.filter((txn)=> txn.transaction_status === "processing").length
-    const pending = transactions.filter((txn)=> txn.transaction_status === "pending").length
-    const failed = transactions.filter((txn)=> txn.transaction_status === "failed").length
+    const completed = useMemo(() => transactions.filter((txn)=> txn.transaction_status === "completed").length, [transactions])
+    const processing = useMemo(() => transactions.filter((txn)=> txn.transaction_status === "processing").length, [transactions])
+    const pending = useMemo(() => transactions.filter((txn)=> txn.transaction_status === "pending").length, [transactions])
+    const failed = useMemo(() => transactions.filter((txn)=> txn.transaction_status === "failed").length, [transactions])
 
     const data = {
         labels: ['Completed', 'Processing', 'Pending', 'Cancelled'],
@@ -46,4 +47,4 @@ const Donut: React.FC = () => {
     );
 }
  
-export default Donut;
+export default React.memo(Donut);

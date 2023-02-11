@@ -1,11 +1,8 @@
 import React, {useState} from 'react';
-
-// import Mainboard from '@/pages/common/mainboard';
 import Mainboard from '@/pages/common/mainboardUser';
 import Balanceboard from '../common/balanceboard';
 import Transactionboard from '../common/transactionboard';
 import Transaction from '../common/transactions';
-import { IoIosArrowBack }  from 'react-icons/io';
 
 function Dashboard() {
   const dashboardData = {
@@ -22,7 +19,7 @@ function Dashboard() {
           <Transactionboard />
         </div>
         :
-        <span className="flex flex-row items-center font-thin text-xl mb-2"><IoIosArrowBack className="mr-3 cursor-pointer" onClick={()=>setIsTxn(false)} /> Transactions</span>
+        <span className="flex flex-row items-center font-thin text-xl mb-2">Transactions</span>
         }
         <div>
         <Transaction isTxn={isTxn} setIsTxn={setIsTxn} />

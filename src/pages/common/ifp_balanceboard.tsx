@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import Image from 'next/image';
 import Text from '@/components/text';
 import Layout from '@/components/layout/Layout';
@@ -32,11 +32,9 @@ const IFPBalanceboard: NextPageWithLayout<IFPBalanceboardProps> = ({children}) =
  
   
   // console.log(balances)
-  const NGN = balances?.filter((bal)=> bal.asset_code === "NGN")
-  const NGNALLOW = balances?.filter((bal)=> bal.asset_code === "NGNALLOW")
-  const NGNLICENSE = balances?.filter((bal)=> bal.asset_code === "NGNLICENSE")
-  // const USDC = balances?.filter((bal)=> bal.asset_code === "USDC")
-  // const XLM = balances?.filter((bal)=> bal.asset_type === "native")
+  const NGN = useMemo(() => balances?.filter((bal:any)=> bal.asset_code === "NGN"), [balances]) 
+  const NGNALLOW = useMemo(() => balances?.filter((bal)=> bal.asset_code === "NGNALLOW"), [balances])
+  const NGNLICENSE = useMemo(() => balances?.filter((bal)=> bal.asset_code === "NGNLICENSE"), [balances])
   
   return (
     <div className="relative w-full h-[auto] mb-6 rounded-xl bg-white shadow-[0px_1px_0px_rgba(0,0,0,0.1)]">
@@ -116,4 +114,4 @@ const IFPBalanceboard: NextPageWithLayout<IFPBalanceboardProps> = ({children}) =
 
 IFPBalanceboard.getLayout = (page) => <Layout>{page}</Layout>;
 
-export default IFPBalanceboard;
+export default React.memo(IFPBalanceboard);

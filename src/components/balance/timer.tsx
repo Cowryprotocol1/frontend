@@ -1,6 +1,5 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 import Layout from '@/components/layout/Layout';
-import { IoHeadset } from 'react-icons/io5';
 import type { NextPageWithLayout } from "../../pages/_app";
 
 type CountdownTimerProps = {
@@ -24,8 +23,8 @@ const CountdownTimer: NextPageWithLayout<CountdownTimerProps> = ({timer, setIsEx
     }
   }, [countdown]);
 // console.log(countdown)
-  const minutes = Math.floor(countdown/60);
-  const seconds = Math.floor(countdown%60);
+  const minutes = useMemo(() => Math.floor(countdown/60), [countdown]);
+  const seconds = useMemo(() => Math.floor(countdown%60), [countdown]);
 
   return (
       <div className="bg-[#EBA352] h-[50px] w-[50px] rounded-full flex flex-col justify-center items-center">
@@ -36,4 +35,4 @@ const CountdownTimer: NextPageWithLayout<CountdownTimerProps> = ({timer, setIsEx
 
 CountdownTimer.getLayout = (page) => <Layout>{page}</Layout>;
 
-export default CountdownTimer;
+export default React.memo(CountdownTimer);

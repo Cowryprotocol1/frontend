@@ -7,7 +7,7 @@ type ModalProps = {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function WhiteModal({ children, isOpen, setIsOpen }: ModalProps) {
+function WhiteModal({ children, isOpen, setIsOpen }: ModalProps) {
   function closeModal() {
     setIsOpen(false);
   }
@@ -50,3 +50,4 @@ export default function WhiteModal({ children, isOpen, setIsOpen }: ModalProps) 
     </>
   );
 }
+export default React.memo(WhiteModal);

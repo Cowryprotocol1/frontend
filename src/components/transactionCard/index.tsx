@@ -1,5 +1,5 @@
 
-import React, {useEffect,useState} from 'react';
+import React, {useState} from 'react';
 import Layout from '@/components/layout/Layout';
 import { HiArrowDownCircle, HiArrowUpCircle } from 'react-icons/hi2'
 import type { NextPageWithLayout } from '@/pages/_app';
@@ -28,12 +28,13 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
   
 
   const {transactions, signXDR, IFPData,getBalance, getDepositIntentIFP, setBalances, getTransactions, role, walletAddress, setTransactions} = useUser();
-  console.log(IFPData, "IFP  in transaction card")
+//   console.log(IFPData, "IFP  in transaction card")
     const handleTxnModal = (id:any)=>{
         const txn = transactions.filter((txn:any)=>txn.id === id)
         setModalData(txn)
         setModalOpen(true)
     }
+
     const handlegetDepositIntentIFP =(txn_id: string)=>{
         setIsLoading(true)
         getDepositIntentIFP(txn_id).then(res=>{
@@ -64,11 +65,8 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
                     setIntentResult("Your wallet will be credited shortly!")
                 }
             })
-            // handlegetDepositIntentIFP(modalData[0]?.id)
 
         }
-        // console.log(signedXDR, "signedXDR")
- 
     }
     const handleCloseModal = ()=>{
         setModalOpen(false)
@@ -261,7 +259,7 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
                     </div>
                     <div>
                         <p className="text-xs font-thin">
-                            {modalData[0]?.merchant[0] === IFPData?.account_id && "(YOU)"}
+                            {modalData[0] !== null && IFPData !== null && modalData[0]?.merchant[0] === IFPData?.account_id && "(YOU)"}
                             {" "}
                             {modalData[0]?.merchant[0]?.substring(0, 3)}...{modalData[0]?.merchant[0]?.substring(modalData[0]?.merchant[0]?.length - 4)}
                             </p>
@@ -297,12 +295,14 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
                     <p className="text-[9px] text-[#414141] absolute top-[-0.5rem] md:top-[-0.7rem] px-1 left-4 md:left-12 bg-white">Transaction Hash</p>
                 </div> 
             }
-            {modalData[0]?.merchant[0] === IFPData?.account_id && modalData[0]?.transaction_status !== "completed"  &&
+
+            {modalData[0]!== null && IFPData !==null && modalData[0]?.merchant[0] === IFPData?.account_id && modalData[0]?.transaction_status !== "completed"  &&
+            
                 <button 
                     className="mt-6 rounded-lg bg-brand_primary_blue py-4 px-8 text-xs text-white"
                     onClick={()=>handlegetDepositIntentIFP(modalData[0]?.id)}
                 >
-                    {isLoading ? "Confirming..." : `Confirm1 ${currencyFormatter.format(modalData[0]?.transaction_amount)}`}
+                    {isLoading ? "Confirming..." : `Confirm ${currencyFormatter.format(modalData[0]?.transaction_amount)}`}
                 </button>
              
             }
@@ -345,7 +345,6 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
         
         
     }
-    {/* {console.log(intentResult, "intentResult")} */}
 
         {modalData[0]?.merchant[0] === IFPData?.account_id && !final  &&
             <button 
@@ -369,4 +368,4 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
 
 TransactionCard.getLayout = (page) => <Layout>{page}</Layout>;
 
-export default TransactionCard;
+export default React.memo(TransactionCard);

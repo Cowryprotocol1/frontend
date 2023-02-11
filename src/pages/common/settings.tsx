@@ -1,11 +1,10 @@
 
-import React, {useEffect,useState} from 'react';
+import React from 'react';
 
 import Layout from '@/components/layout/Layout';
 import type { NextPageWithLayout } from "../_app";
-import { useUser } from "../../store/user";
 import SettingsCard from '@/components/settings/card';
-import {MdModeEditOutline} from 'react-icons/md'
+
 type SettingProps = {
   children?: any;
 }
@@ -93,4 +92,4 @@ const Settingboard: NextPageWithLayout<SettingProps> = ({children}) => {
 
 Settingboard.getLayout = (page) => <Layout>{page}</Layout>;
 
-export default Settingboard;
+export default React.memo(Settingboard);

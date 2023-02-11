@@ -164,14 +164,14 @@ const handleWithdrawIntent =()=>{
     if (res?.error){
       if (typeof res?.error === "string") {
         setError(res?.error)
-        console.log(res)
+        // console.log(res)
       }
       if (res?.assets){
         setErrorAsset(res?.assets)
       }
     }
     else{
-      console.log(res)
+      // console.log(res)
       setWithdrawData(res)
       setNext(3)
       setPaymentMsg(res?.message)

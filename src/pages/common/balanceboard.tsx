@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import Image from 'next/image';
 import Text from '@/components/text';
 import Layout from '@/components/layout/Layout';
@@ -28,7 +28,7 @@ const Balanceboard: NextPageWithLayout<BalanceboardProps> = ({children}) => {
   const [view, setView] = useState(true)
 
 
-  const NGN = balances?.filter((bal)=> bal.asset_code === "NGN")
+  const NGN = useMemo(() => balances?.filter((bal)=> bal.asset_code === "NGN"), [balances])
   // const USDC = balances?.filter((bal)=> bal.asset_code === "USDC")
   // const XLM = balances?.filter((bal)=> bal.asset_type === "native")
   
@@ -79,4 +79,4 @@ const Balanceboard: NextPageWithLayout<BalanceboardProps> = ({children}) => {
 
 Balanceboard.getLayout = (page) => <Layout>{page}</Layout>;
 
-export default Balanceboard;
+export default React.memo(Balanceboard);

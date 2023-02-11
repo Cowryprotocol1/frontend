@@ -6,7 +6,7 @@ import Layout from '@/components/layout/Layout';
 import TopBar from '@/components/layout/TopBar';
 import type { NextPageWithLayout } from "../_app";
 import { useUser } from "../../store/user";
-import { redirectUrl } from '..';
+
 type MainboardProps = {
   title: string;
   text?: string;
@@ -22,6 +22,8 @@ const Mainboard: NextPageWithLayout<MainboardProps> = ({title, text, children}) 
     getAccount, setIFPData
   } = useUser();
 
+ 
+  
   useEffect(() => {
     const walletAddress = localStorage.getItem("walletAddress")
     let x = localStorage.getItem("userType") 
@@ -72,4 +74,4 @@ const Mainboard: NextPageWithLayout<MainboardProps> = ({title, text, children}) 
 
 Mainboard.getLayout = (page) => <Layout>{page}</Layout>;
 
-export default Mainboard;
+export default React.memo(Mainboard);

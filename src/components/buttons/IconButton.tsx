@@ -110,4 +110,4 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
   }
 );
 
-export default IconButton;
+export default React.memo(IconButton);

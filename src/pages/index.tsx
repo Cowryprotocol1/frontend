@@ -24,7 +24,7 @@ export const redirectUrl = (url: string)=>{
   push(url);
 }
 
-export default function HomePage() {
+function HomePage() {
   const [availableVendors, setAvailableVendors] = useState(null)
   const {setWalletAddress, getAccount, setRole} = useUser();
   const [modalOpen, setModalOpen] = useState(false);
@@ -74,13 +74,6 @@ export default function HomePage() {
         )
       .then(res=>{
         getAccount(localStorage.getItem("walletAddress")).then(response=>{
-          // console.log(response, "rsdecs")
-          ///use to check for normal USER
-          // localStorage.setItem("userType", "user") 
-          //   setRole("user")
-          //   window.location.href = "/users/dashboard";
-
-
           if (response.status === "successful") {
             localStorage.setItem("userType", "ifp") 
             window.location.href = "/ifps/dashboard";
@@ -120,7 +113,16 @@ export default function HomePage() {
   }
 
   useEffect( () => {
-    getWalletList();
+    if (localStorage.getItem("userType") === 'user'){
+      window.location.pathname ='/users/dashboard'
+    }
+    else if (localStorage.getItem("userType") === 'ifp') {
+      window.location.pathname ='/ifps/dashboard'
+    }
+    else{
+      getWalletList();
+    }
+    
   }, []);
   
 
@@ -261,3 +263,5 @@ export default function HomePage() {
     </Layout>
   );
 }
+
+export default React.memo(HomePage);

@@ -1,5 +1,4 @@
-
-import React, {useEffect,useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Layout from '@/components/layout/Layout';
 import { useUser } from '@/store/user';
 import type { NextPageWithLayout } from '@/pages/_app';
@@ -30,19 +29,21 @@ const SettingsCard: NextPageWithLayout<SettingsCardProps> = ({headerText,arr,chi
         ifp_id:''
     });
 
+    
+
     useEffect(() => {
       setForm({
-        email: IFPData?.ifp_email_addr,
+        email: IFPData?.ifp_email_addr || "",
         firstname:'',
         lastname:'',
-        bank: IFPData?.ifp_acct_name,
-        phone:IFPData?.ifp_phone_name,
-        billingAddress:IFPData?.ifp_acct_number,
-        ifp_id:IFPData?.account_id,
+        bank: IFPData?.ifp_acct_name || "",
+        phone:IFPData?.ifp_phone_name || "",
+        billingAddress:IFPData?.ifp_acct_number || "",
+        ifp_id:IFPData?.account_id || "",
         vendor:localStorage.getItem("vendor"),
         address:walletAddress,
       })
-    }, [])
+    }, [walletAddress])
     
 
   return (
@@ -57,7 +58,7 @@ const SettingsCard: NextPageWithLayout<SettingsCardProps> = ({headerText,arr,chi
                         type={type} 
                         name={name}
                         placeholder={placeholder}
-                        value={form?.[name]}
+                        value={form?.[name]|| ""}
                         disabled={true}
                         className="bg-transparent border-1 h-[45px] border-[#EDEDED] text-black w-full md:w-[100%] text-xs  font-thin rounded"
                     />
@@ -73,4 +74,4 @@ const SettingsCard: NextPageWithLayout<SettingsCardProps> = ({headerText,arr,chi
 
 SettingsCard.getLayout = (page) => <Layout>{page}</Layout>;
 
-export default SettingsCard;
+export default React.memo(SettingsCard);
