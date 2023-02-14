@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { FaCamera }  from 'react-icons/fa';
 type AvatarProps = {
   src: string;
@@ -7,7 +8,7 @@ type AvatarProps = {
   height: number;
   className?: string;
   editBg: string;
-  onClick?: () => void;
+  onClick?: () => void; 
 }
 
 const Avatar: React.FC<AvatarProps> = ({ src, alt, className, width=70, height=70, editBg, onClick }) => {

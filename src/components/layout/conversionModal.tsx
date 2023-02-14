@@ -12,6 +12,7 @@ import { useUser } from '@/store/user';
 import 'react-tooltip/dist/react-tooltip.css';
 import { Tooltip as ReactTooltip } from 'react-tooltip'
 import { useRouter } from 'next/router';
+import {IoIosCloseCircleOutline} from 'react-icons/io';
 
 type ConversionModalProps = {
   timer?: number;
@@ -101,6 +102,25 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement> | any)=>{
     [e.target.name]: e.target.value
   })
 }
+const handleBack = ()=>{
+  if (next === 1){
+    setModalOpen(false)
+    setError("")
+    setIsLoading(false)
+  }
+  else if (next === 2){
+    setError("")
+    setIsLoading(false)
+    setNext(1)
+  }
+  else if (next === 3){
+    setError("")
+    setIsLoading(false)
+    setNext(2)
+  }
+  
+  
+}
 const handleCloseModal = ()=>{
   setNext(1)
   setModalOpen(false)
@@ -136,7 +156,7 @@ const handleConfirmation=()=>{
     //handle switching user to an IFP account
     if (res.status === "successful") {
       setUserTxStatus(res)
-      localStorage.setItem("userType", "ifp")
+      localStorage.setItem("userType", "ifp") 
       setRole("ifp")
       push('/ifps/dashboard')
       // window.location.href = "/ifps/dashboard";
@@ -145,6 +165,7 @@ const handleConfirmation=()=>{
     }
     else {
       setUserTxStatus(res)
+      
       //pass
     }
   })
@@ -185,7 +206,8 @@ const handleOnboarding =()=>{
       >
         <div className="w-full flex flex-row justify-center items-center">
           <p className='font-thin text-xs'>Become an IFP</p>
-          <HiOutlineArrowSmLeft size={25} className=" absolute left-4 text-black mb-4 cursor-pointer" onClick={handleCloseModal}/>
+          <HiOutlineArrowSmLeft size={25} className=" absolute left-4 text-black mb-4 cursor-pointer" onClick={handleBack}/>
+          <IoIosCloseCircleOutline size={25} className=" absolute right-4 text-black mb-4 cursor-pointer" onClick={handleCloseModal}/>
         </div>
         <div className="w-full p-3 flex flex-row justify-center items-center mt-4 bg-brand_primary_blue rounded-lg">
           <Image 
@@ -204,24 +226,24 @@ const handleOnboarding =()=>{
           Please confirm the details inputted for your deposit below.
           </p>}
       </Dialog.Title>
-      {error !== "" && <p className="text-xs rounded  my-2 p-2 text-center bg-[#FBE1E1] text-[#E50808]">{error}</p>}
+      {error !== "" && <p className="text-xs rounded  my-2 p-2 text-center bg-[#FCF4EA] text-[#818181]">{error}</p>}
       {error === "your address must add trustline to the following assets"&& assetError?.length >0 &&
         assetError?.map(({code, issuer})=>{
           return (
-            <div key={code} className="flex flex-row justify-between items-center px-2 rounded bg-[#FBE1E1] w-full">
-              <p className=" text-[0.65rem] font-thin text-[#E50808]">{code}:</p>
+            <div key={code} className="flex flex-row justify-between items-center px-2 rounded bg-[#FCF4EA] w-full">
+              <p className=" text-[0.65rem] font-thin text-[#818181]">{code}:</p>
               <input
                 type="text" 
                 value={issuer}
                 disabled={true}
-                className="bg-transparent border-1  border-[#EDEDED] text-[#E50808] w-full md:w-[85%] text-[0.65rem]  font-thin rounded"
+                className="bg-transparent border-1  border-[#FCF4EA] text-[#818181] w-full md:w-[85%] text-[0.65rem]  font-thin rounded"
               />
               <FiCopy id={code} data-tooltip-content={copyData?.[code]} 
                   onClick={()=>{
                     copyToClipboard(issuer)
                     handleTooltip(code)
                   }} 
-                  className="mr-1 text-[#E50808]"/>
+                  className="mr-1 text-[#818181]"/>
                   <ReactTooltip anchorId={code} />
               </div>
           )
@@ -247,7 +269,7 @@ const handleOnboarding =()=>{
         })
  
       }
-      {next == 2 && 
+      {next == 2 && error === "" &&
         <>
         <div className="border-[1px] border-[#F2F2F2] rounded-xl w-full p-4">
           <div className="flex flex-row justify-between items-center my-2">

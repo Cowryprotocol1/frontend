@@ -6,6 +6,7 @@ import Layout from '@/components/layout/Layout';
 import TopBar from '@/components/layout/TopBar';
 import type { NextPageWithLayout } from "../_app";
 import { useUser } from "../../store/user";
+import { useRouter } from 'next/router';
 
 type MainboardProps = {
   title: string;
@@ -14,7 +15,7 @@ type MainboardProps = {
 }
 
 const Mainboard: NextPageWithLayout<MainboardProps> = ({title, text, children}) => {
-
+  const {push} = useRouter();
   const [name, setName] = useState("")
   const { 
     toggleLogoutMode, role, setRole, getTransactions, setTransactions,
@@ -45,6 +46,7 @@ const Mainboard: NextPageWithLayout<MainboardProps> = ({title, text, children}) 
         // console.log(response, "get account api")
         setIFPData(response)
         setRole("ifp");
+        push('/ifps/dashboard')
       })
     }
     else if (x === 'user') {

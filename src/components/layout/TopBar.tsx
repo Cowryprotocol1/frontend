@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { RxPlusCircled  } from 'react-icons/rx';
+import { RxPlusCircled, RxMinusCircled  } from 'react-icons/rx';
 
 import Layout from '@/components/layout/Layout';
 import { useUser } from '@/store/user';
@@ -7,6 +7,8 @@ import type { NextPageWithLayout } from "../../pages/_app";
 import ConversionModal from './conversionModal';
 import {BsBell}  from 'react-icons/bs';
 import { RiLogoutCircleLine } from 'react-icons/ri';
+import OffboardModal from './offboardModal';
+
 type TopBarProps = {
   username: string;
   role: string;
@@ -14,14 +16,9 @@ type TopBarProps = {
 
 const TopBar: NextPageWithLayout<TopBarProps> = ({username, role}) => {
   const [hide, setHide] = useState("")
-const {conversionOpen, setConversionOpen, transactions, IFPData, toggleLogoutMode} = useUser();
+const {offBoardOpen, setOffBoardOpen, conversionOpen, setConversionOpen, transactions, IFPData, toggleLogoutMode} = useUser();
 const pendingIFP = transactions?.filter(({merchant, transaction_status})=>merchant[0] !== null && IFPData !== null && merchant[0] === IFPData?.account_id &&  transaction_status === "pending")
 
-useEffect(() => {
-  if (role === "ifp" ) {
-    setHide("hidden")
-  }
-}, [role])
 
     // console.log(pendingIFP, "pendin")
     // console.log(role)
@@ -42,10 +39,15 @@ useEffect(() => {
 
       {/* <button className="bg-brand_primary_green rounded-xl h-12 text-white flex flex-row justify-between items-center px-12 text-sm">Top Up</button> :  */}
         <button 
-          className={`${hide} bg-[#0D2A3B] rounded-xl h-12 text-white flex flex-row justify-between items-center px-4 text-sm`}
-          onClick={()=>setConversionOpen(true)}
+          className={`${role === "ifp" ?"bg-[#818181]": "bg-[#0D2A3B]"} rounded-xl h-12 text-white flex flex-row justify-between items-center px-4 text-sm`}
+          onClick={()=>role === "ifp" ? setOffBoardOpen(true): setConversionOpen(true)}
         >
-          <RxPlusCircled  size={25} className="mr-2"/> Become an IFP
+          {role === "ifp" ? 
+          <><RxMinusCircled  size={25} className="mr-2"/> Offboard</>
+          : 
+          <><RxPlusCircled  size={25} className="mr-2"/> Become an IFP</>
+          }
+          
         </button>
 
         <span className="ml-10 cursor-pointer" onClick={toggleLogoutMode}><RiLogoutCircleLine className="text-red-500"/></span>
@@ -57,6 +59,10 @@ useEffect(() => {
     <ConversionModal 
       isOpen={conversionOpen}
       setModalOpen={setConversionOpen}
+    />
+    <OffboardModal 
+    isOpen={offBoardOpen}
+    setModalOpen={setOffBoardOpen}
     />
     </>
   );

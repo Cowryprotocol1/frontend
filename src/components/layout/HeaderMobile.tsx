@@ -72,7 +72,7 @@ function MobileHeader({ alt, image, route, handleLogOut, walletAddress }: Mobile
         onClick={toggleModal}
         />
       <div className="md:hidden xs:flex flex-row justify-around">
-      <Image
+      <img
         src={image}
         alt={alt}
         width={32}
@@ -84,7 +84,7 @@ function MobileHeader({ alt, image, route, handleLogOut, walletAddress }: Mobile
         <div className={`fixed top-0 left-0 bg-brand_primary_blue w-2/3 h-fit p-4 z-10`}> 
         <SlClose size={25} className="text-white_day mb-4" onClick={toggleModal}/>
         <Image src={PassBg} alt="passbg" className="absolute top-16 right-16"/>
-         <Avatar src="https://picsum.photos/200" alt="avatar" width={70} height={70} className="img-circle mt-10 -ml-12" editBg="bg-brand_primary_green"/>
+         <Avatar src={image} alt="avatar" width={70} height={70} className="img-circle mt-10 -ml-12" editBg="bg-brand_primary_green"/>
         <Text avatar="avatar_name">{""}</Text>
         <Text avatar="wallet_address">{walletAddress?.substring(0, 5)}...{walletAddress?.substring(walletAddress?.length - 4)}</Text>
 

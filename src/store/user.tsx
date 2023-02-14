@@ -54,6 +54,10 @@ export type UserContextProps = {
   setConversionOpen:React.Dispatch<React.SetStateAction<boolean>>;
   setRole:React.Dispatch<React.SetStateAction<string>>;
 
+  offBoardOpen:any;
+  offboardIFP:any;
+  setOffBoardOpen:React.Dispatch<React.SetStateAction<boolean>>;
+
 };
 
 const UserContext = createContext<UserContextProps>({
@@ -67,6 +71,7 @@ const UserContext = createContext<UserContextProps>({
   getBalance: ()=>null,
   getWithdrawalIntent:()=>null,
   onboardIFP:()=>null,
+  offboardIFP:()=>null,
   role: "",
   getDepositIntentIFP:()=>null,
   getTransactionStatus:()=>null,
@@ -93,6 +98,8 @@ const UserContext = createContext<UserContextProps>({
   setRole:()=>null,
   setIFPData:()=>null,
   getAccount:()=>null,
+  offBoardOpen: null,
+  setOffBoardOpen: ()=>null,
 });
 
 
@@ -117,6 +124,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [depositOpen, setDepositOpen] = useState(false);
   const [withdrawOpen, setWithdrawOpen] = useState(false);
   const [conversionOpen, setConversionOpen] = useState(false)
+  const [offBoardOpen, setOffBoardOpen] = useState(false)
   const [IFPData, setIFPData] = useState(null)
 
   const toggleLogoutMode = () => {
@@ -170,6 +178,27 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
   
+  const offboardIFP = async ()=> {
+    let oData = {
+      merchant_PubKey: walletAddress,
+      merchant_Id: IFPData?.account_id,
+    }
+    // console.log(oData)
+    try {
+      const response = await fetch(`${url}/offboarding`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(oData),
+      })
+      let res = response.json()
+      return res
+    } catch (error) {
+      throw error;
+    }
+  };
+
   const onboardIFP = async (data: any)=> {
     let wData = {
       blockchainAddress: walletAddress,
@@ -364,6 +393,9 @@ const getTransactionStatus = async (transactionId: string) => {
       getAccount,
       getDepositIntentIFP,
       getTransactionStatus,
+      offboardIFP,
+      offBoardOpen,
+      setOffBoardOpen
     }}>
       {children}
     </UserContext.Provider>

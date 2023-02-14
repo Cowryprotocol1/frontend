@@ -12,7 +12,8 @@ import { currencyFormatter } from '@/pages/common/balanceboard';
 import { useUser } from '@/store/user';
 import { copyToClipboard } from './withdrawModal';
 import 'react-tooltip/dist/react-tooltip.css';
-import { Tooltip as ReactTooltip } from 'react-tooltip'
+import { Tooltip as ReactTooltip } from 'react-tooltip';
+import {IoIosCloseCircleOutline} from 'react-icons/io';
 
 type DepositModalProps = {
   timer: number;
@@ -46,6 +47,9 @@ const DepositModal: NextPageWithLayout<DepositModalProps> = ({
   const {walletAddress, role, getBalance, setBalances, getDepositIntent, postPaymentConfirmation, getTransactions, setTransactions} =useUser();
   const [copyData, setCopyData] = useState({
     account_number: 'Copy',
+    NGNALLOW: 'Copy',
+    NGNLICENSE: 'Copy',
+    NGN: 'Copy'
   });
   const mappable = [
     {
@@ -148,6 +152,25 @@ const handleDepositIntent = ()=>{
     })
 
 }
+const handleBack = ()=>{
+  if (next === 1){
+    setModalOpen(false)
+    setError("")
+    setIsLoading(false)
+  }
+  else if (next === 2){
+    setError("")
+    setIsLoading(false)
+    setNext(1)
+  }
+  else if (next === 3){
+    setError("")
+    setIsLoading(false)
+    setNext(2)
+  }
+  
+  
+}
 const handleCloseModal = ()=>{
   setNext(1)
   setModalOpen(false)
@@ -175,7 +198,8 @@ useEffect(() => {
       >
         <div className="w-full flex flex-row justify-center items-center">
           <p className='font-thin text-xs'>Deposit</p>
-          <HiOutlineArrowSmLeft size={25} className=" absolute left-4 text-black mb-4 cursor-pointer" onClick={handleCloseModal}/>
+          <HiOutlineArrowSmLeft size={25} className=" absolute left-4 text-black mb-4 cursor-pointer" onClick={handleBack}/>
+          <IoIosCloseCircleOutline size={25} className=" absolute right-4 text-black mb-4 cursor-pointer" onClick={handleCloseModal}/>
         </div>
         <div className="w-full p-3 flex flex-row mt-4 bg-brand_primary_blue rounded-lg">
 
@@ -194,14 +218,29 @@ useEffect(() => {
           />
         </div>
       </Dialog.Title>
-      {error !== "" && <p className="text-xs rounded  my-2 p-1 text-center bg-[#FBE1E1] text-[#E50808]">{error}
-      {errorAsset.length > 0 && errorAsset.map(({code, issuer})=>{
-        return (<div className="flex flex-row items-center mt-4">
-          <p className="text-xs text-[#E50808] ml-4">{code}: </p>
-          <input className="text-xs text-[#E50808] w-[85%] p-4 bg-transparent" disabled value={issuer}/>
-        </div>)
-      })}
-      </p>}
+      {error !== "" && <p className="text-xs rounded  my-2 p-2 text-center bg-[#FCF4EA] text-[#818181]">{error}</p>}
+      {errorAsset?.length >0 &&
+        errorAsset?.map(({code, issuer})=>{
+          return (
+            <div key={code} className="flex flex-row justify-between items-center px-2 rounded bg-[#FCF4EA] w-full">
+              <p className=" text-[0.65rem] font-thin text-[#818181]">{code}:</p>
+              <input
+                type="text" 
+                value={issuer}
+                disabled={true}
+                className="bg-transparent border-1  border-[#FCF4EA] text-[#818181] w-full md:w-[85%] text-[0.65rem]  font-thin rounded"
+              />
+              <FiCopy id={code} data-tooltip-content={copyData?.[code]} 
+                  onClick={()=>{
+                    copyToClipboard(issuer)
+                    handleTooltip(code)
+                  }} 
+                  className="mr-1 text-[#818181]"/>
+                  <ReactTooltip anchorId={code} />
+              </div>
+          )
+        })
+      }
       <div className="flex flex-col items-center gap-4 mt-4  w-[100%]">
         { next ===  1 && mappable.map(({type, placeholder,name, value, id})=>{
           return (
