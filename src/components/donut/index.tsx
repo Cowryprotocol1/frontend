@@ -2,10 +2,12 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
 import { useUser } from "../../store/user";
 import React, {useMemo} from 'react';
-
+import Layout from '@/components/layout/Layout';
+import type { NextPageWithLayout } from "../../pages/_app";
 ChartJS.register(ArcElement, Tooltip, Legend);
  
-const Donut: React.FC = () => {
+
+const Donut: NextPageWithLayout = () => {
     const {transactions} = useUser();
     const completed = useMemo(() => transactions.filter((txn)=> txn.transaction_status === "completed").length, [transactions])
     const processing = useMemo(() => transactions.filter((txn)=> txn.transaction_status === "processing").length, [transactions])
@@ -46,5 +48,5 @@ const Donut: React.FC = () => {
         </div>
     );
 }
- 
+Donut.getLayout = (page) => <Layout>{page}</Layout>;
 export default React.memo(Donut);

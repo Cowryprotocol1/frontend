@@ -58,27 +58,31 @@ const DepositModal: NextPageWithLayout<DepositModalProps> = ({
         name:"address",
         placeholder:"Wallet Address",
         value: form.address,
+        test_id: "form"
     },
     {
         id: 2,
         type:"text",
         name:"amount",
         placeholder:"Deposit Amount",
-        value:form.amount
+        value:form.amount,
+        test_id: "form"
     },
     {
       id: 3,
       type:"text",
       name:"bank",
       placeholder:"Deposit Bank Name",
-      value:form.bank
+      value:form.bank,
+      test_id: "form"
     },
     {
       id: 4,
       type:"text",
       name:"description",
       placeholder:"Transaction Description",
-      value:form.description
+      value:form.description,
+      test_id: "form"
   },
 ]
 
@@ -242,15 +246,16 @@ useEffect(() => {
         })
       }
       <div className="flex flex-col items-center gap-4 mt-4  w-[100%]">
-        { next ===  1 && mappable.map(({type, placeholder,name, value, id})=>{
+        { next ===  1 && mappable.map(({type, placeholder,name, value, id, test_id})=>{
           return (
             <div key={id} className="w-[100%] relative ">
             <input
               key={id} 
               type={type} 
               name={name}
+              data-testid={test_id}
               placeholder={placeholder}
-              value={value}
+              value={value || ''}
               onChange={handleChange}
               className={`bg-transparent border-1 h-[45px] ${name ==="amount" && parseFloat(form.amount) < 1000 ? "focus:border-[#E50808] border-[#E50808]" : "border-[#EDEDED]"} text-black w-full md:w-[85%] text-xs  font-thin rounded`}
             />
@@ -268,27 +273,27 @@ useEffect(() => {
       {next == 2 && 
         <>
         <div className="border-[1px] border-[#F2F2F2] rounded-xl w-full p-4">
-          <div className="flex flex-row justify-between items-center my-2">
+          <div className="flex flex-row justify-between items-center my-2" data-testid="form_two">
             <p className=" text-xs font-thin text-[#414141]">Transaction Amount</p>
             <p className=" text-xs font-thin">{currencyFormatter.format(parseFloat(form?.amount)|| 0.00)}</p>
           </div>
-          <div className="flex flex-row justify-between items-center my-2">
+          <div className="flex flex-row justify-between items-center my-2" data-testid="form_two">
             <p className=" text-xs font-thin text-[#414141]">Transaction fees</p>
             <p className=" text-xs font-thin">{currencyFormatter.format(200)}</p>
           </div>
-          <div className="flex flex-row justify-between items-center my-2">
+          <div className="flex flex-row justify-between items-center my-2" data-testid="form_two">
             <p className=" text-xs font-thin text-[#414141]">Total Payable</p>
             <p className=" text-xs font-medium">{currencyFormatter.format(parseFloat(form?.amount) + 200)}</p>
           </div>
-          <div className="flex flex-row justify-between items-center my-2">
+          <div className="flex flex-row justify-between items-center my-2" data-testid="form_two">
             <p className=" text-xs font-thin text-[#414141]">Wallet Address to Credit</p>
             <p className=" text-xs font-thin text-brand_primary_green">{walletAddress?.substring(0, 5)}...{walletAddress?.substring(walletAddress?.length - 4)}</p>
           </div>
-          <div className="flex flex-row justify-between items-center my-2">
+          <div className="flex flex-row justify-between items-center my-2" data-testid="form_two">
             <p className=" text-xs font-thin text-[#414141]">Paying Bank</p>
             <p className=" text-xs font-thin ">{form?.bank}</p>
           </div>
-          <div className="flex flex-row justify-between items-center my-2">
+          <div className="flex flex-row justify-between items-center my-2" data-testid="form_two">
             <p className=" text-xs font-thin text-[#414141]">Description</p>
             <p className=" text-xs font-thin ">{form?.description}</p>
           </div>
@@ -305,6 +310,7 @@ useEffect(() => {
         <button 
         className={`${parseInt(form.amount) < 1000 || form.amount == '' || form.bank == '' || form.description == '' ? "bg-[#818181]": "bg-brand_primary_green"}  mt-4 rounded px-4 py-2 text-xs text-white`}
         disabled={parseInt(form.amount) < 1000 || form.amount == '' || form.bank == '' || form.description == '' ? true: false}
+        data-testid="submit_btn"
         onClick={()=>{
           if (next === 1){
             setNext(2)
@@ -381,6 +387,7 @@ useEffect(() => {
               Report Problem
             </button>
             <button 
+              data-testid="final_submit_btn"
               className="bg-brand_primary_green mt-2 ml-2 rounded px-4 py-2 text-xs text-white"
               onClick={handleConfirmation}
             >

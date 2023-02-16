@@ -66,13 +66,15 @@ const WithdrawModal: NextPageWithLayout<WithdrawModalProps> = ({
         name:"amount",
         placeholder:"Withdraw Amount",
         value: form.amount,
+        test_id: "form"
     },
     {
         id: 2,
         type:"text",
         name:"bank",
         placeholder:"Bank Name",
-        value:form.bank
+        value:form.bank,
+        test_id: "form"
     },
     
     {
@@ -80,28 +82,32 @@ const WithdrawModal: NextPageWithLayout<WithdrawModalProps> = ({
       type:"text",
       name:"description",
       placeholder:"Transaction Description",
-      value:form.description
+      value:form.description,
+      test_id: "form"
     },
     {
       id: 4,
       type:"text",
       name:"account_number",
       placeholder:"Account Number",
-      value:form.account_number
+      value:form.account_number,
+      test_id: "form"
     },
     {
       id: 5,
       type:"text",
       name:"account_name",
       placeholder:"Account Name",
-      value:form.account_name
+      value:form.account_name,
+      test_id: "form"
     },
     {
       id: 6,
       type:"text",
       name:"phone",
       placeholder:"Phone Number",
-      value:form.phone
+      value:form.phone,
+      test_id: "form"
     },
 ]
 
@@ -257,15 +263,16 @@ const handleWithdrawIntent =()=>{
         })
       }
       <div className="flex flex-col items-center gap-4 mt-4  w-[100%]">
-        { next ===  1 && mappable.map(({type, placeholder,name, value, id})=>{
+        { next ===  1 && mappable.map(({type, placeholder,name, value, id, test_id})=>{
           return (
             <div key={id} className="w-[100%] relative ">
             <input
               key={id} 
               type={type} 
               name={name}
+              data-testid={test_id}
               placeholder={placeholder}
-              value={value}
+              value={value || ''}
               maxLength={name === "account_number" ? 10 : 100}
               onChange={handleChange}
               className={`bg-transparent border-1 h-[45px] ${name ==="amount" && NGN?.length > 0 && parseFloat(NGN[0]?.balance) < parseFloat(form.amount)? "focus:border-[#E50808] border-[#E50808]" : "border-[#EDEDED]"} text-black w-full md:w-[85%] text-xs  font-thin rounded`}
@@ -287,27 +294,27 @@ const handleWithdrawIntent =()=>{
         <>
         <div className="border-[1px] border-[#F2F2F2] rounded-xl w-full p-4">
           
-          <div className="flex flex-row justify-between items-center my-2">
+          <div className="flex flex-row justify-between items-center my-2" data-testid="form_two">
             <p className=" text-xs font-thin text-[#414141]">Transaction Amount</p>
             <p className=" text-xs font-thin">{currencyFormatter.format(parseFloat(form?.amount)|| 0.00)}</p>
           </div>
-          <div className="flex flex-row justify-between items-center my-2">
+          <div className="flex flex-row justify-between items-center my-2" data-testid="form_two">
             <p className=" text-xs font-thin text-[#414141]">Transaction fees</p>
             <p className=" text-xs font-thin">{currencyFormatter.format(200)}</p>
           </div>
-          <div className="flex flex-row justify-between items-center my-2">
+          <div className="flex flex-row justify-between items-center my-2" data-testid="form_two">
             <p className=" text-xs font-thin text-[#414141]">Total Withrawable</p>
             <p className=" text-xs font-medium">{currencyFormatter.format(parseFloat(form?.amount) + 200)}</p>
           </div>
-          <div className="flex flex-row justify-between items-center my-2">
+          <div className="flex flex-row justify-between items-center my-2" data-testid="form_two">
             <p className=" text-xs font-thin text-[#414141]">Account Number</p>
             <p className=" text-xs font-medium text-brand_primary_green">{form?.account_number}</p>
           </div>
-          <div className="flex flex-row justify-between items-center my-2">
+          <div className="flex flex-row justify-between items-center my-2" data-testid="form_two">
             <p className=" text-xs font-thin text-[#414141]">Account Name</p>
             <p className=" text-xs font-medium ">{form?.account_name}</p>
           </div>
-          <div className="flex flex-row justify-between items-center my-2">
+          <div className="flex flex-row justify-between items-center my-2" data-testid="form_two">
             <p className=" text-xs font-thin text-[#414141]">Description</p>
             <p className=" text-xs font-medium ">{form?.description}</p>
           </div>
@@ -319,6 +326,7 @@ const handleWithdrawIntent =()=>{
       {next !== 3 &&
         <>
         <button 
+        data-testid="submit_btn"
         className={`${NGN?.length > 0 && parseFloat(NGN[0]?.balance) < parseFloat(form.amount) || form.bank === '' || form.account_name === '' || form.account_number === '' || form.account_number.length < 10 || form.phone === '' || form.description === '' || form.amount === '' ? "bg-gray-300 text-black" :"bg-brand_primary_green mt-4 text-white"} rounded px-4 py-2 text-xs`}
         disabled={NGN?.length > 0 && parseFloat(NGN[0]?.balance) < parseFloat(form.amount) || form.bank === '' || form.account_name === '' || form.account_number === '' || form.account_number.length < 10 || form.phone === '' || form.description === '' || form.amount === '' ? true: false}
         onClick={()=>{
