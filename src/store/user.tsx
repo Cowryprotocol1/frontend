@@ -3,7 +3,8 @@ import React, { createContext, useContext, useEffect,useState, useCallback } fro
 import { User } from "@/constant/dummydata";
 
 
-const url = `https://cowryprotocol.io`;
+// const url = `https://cowryprotocol.io`;
+const url = `https://cowry-backend.herokuapp.com`; //this should will be change later to something like api.cowryprotocol.io
 const stellar_url = ` https://horizon-testnet.stellar.org`
 
 
