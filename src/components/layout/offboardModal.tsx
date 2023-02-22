@@ -5,11 +5,11 @@ import Image from 'next/image';
 import WhiteModal from '@/components/modal/whitemodal';
 import { Dialog } from '@headlessui/react';
 import Conversion from '../../../public/images/conversion_ifp.png';
-import { kit } from '@/store/wallet_connect';
 import { useUser } from '@/store/user';
 import 'react-tooltip/dist/react-tooltip.css';
 import { useRouter } from 'next/router';
 import {IoIosCloseCircleOutline} from 'react-icons/io';
+import walletConnectAll from '@/store/wallet_connect';
 
 type OffBoardModalProps = {
   isOpen: boolean;
@@ -48,6 +48,10 @@ const OffBoardModal: NextPageWithLayout<OffBoardModalProps> = ({
 
   const handleSignOffboardingIFP =async ()=>{
     setIsLoading(true)
+    const wallet = localStorage.getItem("vendor")
+
+    const kit = await walletConnectAll(wallet)
+    
     const {signedXDR} = await kit.sign({
         xdr: offboardingData?.raw_xdr,
         publicKey: walletAddress
