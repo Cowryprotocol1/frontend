@@ -11,7 +11,7 @@ import Image from 'next/image';
 import Logo from '../../../public/images/logo_c.png';
 import { currencyFormatter } from '@/pages/common/ifp_balanceboard';
 import {HiOutlineArrowSmLeft} from 'react-icons/hi';
-import { kit } from '@/store/wallet_connect';
+import walletConnectAll from '@/store/wallet_connect';
 
 type TransactionCardProps = {
   children?: any;
@@ -52,6 +52,10 @@ const TransactionCard: NextPageWithLayout<TransactionCardProps> = ({children}) =
         })
     }
     const handleSignDepositIFP =async ()=>{
+        const wallet = localStorage.getItem("vendor")
+
+        const kit = await walletConnectAll(wallet)
+
         setIsLoading(true)
         const {signedXDR} = await kit.sign({
             xdr: intentResult?.xdr,

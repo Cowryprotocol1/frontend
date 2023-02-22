@@ -11,13 +11,13 @@ import Text from '@/components/text';
 import LogoName from '../../public/images/logo_name.png';
 import LogoC from '../../public/images/logo_c.png';
 import Hamburger from '../../public/images/hamburger_green.png';
-import { kit } from '@/store/wallet_connect';
 import { useState } from 'react';
 import Modal from '@/components/modal';
-import { WalletType } from 'stellar-wallets-kit';
+import { WalletType, StellarWalletsKit } from 'stellar-wallets-kit';
 import Spinner from '@/components/layout/Spinner';
 import { SiHiveBlockchain } from 'react-icons/si';
 
+import walletConnectAll from '@/store/wallet_connect';
 
 export const redirectUrl = (url: string)=>{
   const { push } = useRouter();
@@ -55,19 +55,20 @@ function HomePage() {
         break;
       case "RABET":
         x = WalletType.RABET
+        break;
       case "WALLET_CONNECT":
         x = WalletType.WALLET_CONNECT
+        break;
       case "FREIGHTER":
-        x = WalletType.FREIGHTER
-      break;
-      default:
         x = WalletType.FREIGHTER
         break;
     }
+    let newKit = await walletConnectAll(x)
+
     try {
 
-      await kit.setWallet(x)
-      await kit.getPublicKey()
+      await newKit.setWallet(x) //not sure this is needed again
+      await newKit.getPublicKey()
       .then(res=>
         localStorage.setItem("walletAddress", res) 
         // localStorage.setItem("walletAddress", "GBZGNJFRXS2AQ6GQ2QNSRFTA54W6Z36KMTKSJ35GEWBXH4RWJLULLBVH") 
@@ -99,7 +100,7 @@ function HomePage() {
   }
   async function getWalletList() {
     try {
-      const vendors = await kit.getSupportedWallets();
+      const vendors = await StellarWalletsKit.getSupportedWallets();
       setAvailableVendors(vendors);
       return vendors;
     } catch (e) {
