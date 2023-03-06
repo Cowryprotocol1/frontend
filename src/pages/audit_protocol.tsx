@@ -3,7 +3,10 @@ import Layout from '@/components/layout/Layout';
 import Seo from '@/components/Seo';
 import type { NextPageWithLayout } from "./_app";
 
-const url:string = 'https://cowry-backend.herokuapp.com/audit_protocol';
+
+
+const url: string = 'https://cowry-backend.herokuapp.com/audit_protocol';
+// const url: string = 'http://localhost:8000/audit_protocol';
 
 const redirectToAlternative=(url:string)=>{
     window.location.href =url
