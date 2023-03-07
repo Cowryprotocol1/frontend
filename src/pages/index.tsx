@@ -13,7 +13,8 @@ import LogoC from '../../public/images/logo_c.png';
 import Hamburger from '../../public/images/hamburger_green.png';
 import { useState } from 'react';
 import Modal from '@/components/modal';
-import { WalletType, StellarWalletsKit } from 'stellar-wallets-kit';
+// import { WalletType, StellarWalletsKit } from 'stellar-wallets-kit';
+import { WalletType, StellarWalletsKit } from 'stellarKit'
 import Spinner from '@/components/layout/Spinner';
 import { SiHiveBlockchain } from 'react-icons/si';
 

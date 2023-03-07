@@ -1,5 +1,5 @@
 
-import { StellarWalletsKit, WalletNetwork, WalletType } from 'stellar-wallets-kit';
+import { StellarWalletsKit, WalletNetwork, WalletType } from 'stellarKit';
 
 async function walletConnectAll( wallet:string){
   //should take wallet connect variable
