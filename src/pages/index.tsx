@@ -178,7 +178,8 @@ function HomePage() {
           
           <div className='layout flex flex-col items-center justify-center text-center h-[80vh] lg:h-[60vh]'>
             <p className='text-white text-[24px] lg:text-[36px] font-medium leading-10'>
-              The Fastest peer-to-peer Decentralized protocol for creation of a digital currency.
+              {/* The Fastest peer-to-peer Decentralized protocol for creation of a digital currency. */}
+              Decentralized protocol for Fiat on and Off ramp
             </p>
             <p className='text-[#D4D4D4] text-[14px] lg:text-[20px] font-thin leading-10'>
               Enjoy seamless, efficient financial services to send and receive fund from any part of the world.
@@ -256,7 +257,7 @@ function HomePage() {
             <footer className='absolute bottom-2 text-white'>
               © {new Date().getFullYear()} @{' '}
               <UnderlineLink href='https://cowryprotocol.io/'>
-                cowry protocol inc
+                cowry protocol
               </UnderlineLink>
             </footer>
           </div>

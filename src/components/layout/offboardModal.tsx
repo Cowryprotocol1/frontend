@@ -115,8 +115,11 @@ const OffBoardModal: NextPageWithLayout<OffBoardModalProps> = ({
           />
         </div>
         <p className="text-[#818181] my-4 font-thin text-center md:text-xs text-[0.7rem]">
-          Please confirm you want to leave Cowry protocol DAO. You will nolonger enjoy the benefits associated with being an IFP.
+          Please confirm you no longer hold any user funds in your account, if you do you wont be able to Off board.
           </p>
+        <p className="text-[#818181] my-4 font-thin text-center md:text-xs text-[0.7rem]">
+          Please also confirm you want to leave Cowry protocol. You will no longer enjoy the benefits associated with being an IFP.
+        </p>
         
       </Dialog.Title>
       {error !== "" && <p className="text-xs rounded  my-2 p-2 text-center bg-[#FCF4EA] text-[#818181]">{error}</p>}
@@ -127,7 +130,7 @@ const OffBoardModal: NextPageWithLayout<OffBoardModalProps> = ({
             className="bg-gray-300 mt-4 text-black rounded px-4 py-2 text-xs"
             onClick={handleOffboarding}
             >
-              Remove me from the DAO
+              Remove me from the Protocol
           </button>
         }
         {offboardingData !== null && 
