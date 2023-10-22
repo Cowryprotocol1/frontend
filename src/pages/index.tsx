@@ -114,18 +114,18 @@ function HomePage() {
     }
   }
 
-  useEffect( () => {
-    if (localStorage.getItem("userType") === 'user'){
-      window.location.pathname ='/users/dashboard'
-    }
-    else if (localStorage.getItem("userType") === 'ifp') {
-      window.location.pathname ='/ifps/dashboard'
-    }
-    else{
-      getWalletList();
-    }
+  // useEffect( () => {
+  //   if (localStorage.getItem("userType") === 'user'){
+  //     window.location.pathname ='/users/dashboard'
+  //   }
+  //   else if (localStorage.getItem("userType") === 'ifp') {
+  //     window.location.pathname ='/ifps/dashboard'
+  //   }
+  //   else{
+  //     getWalletList();
+  //   }
     
-  }, []);
+  // }, []);
   
 
   return (
@@ -157,9 +157,9 @@ function HomePage() {
               <a className="text-white my-2 mx-8 lg:m-8 font-thin cursor-pointer hover:text-[#21C460]">FAQs</a>
               <a className="text-white my-2 mx-8 py-2 px-6 font-thin hover:bg-white hover:text-[#21C460] cursor-pointer bg-[#21C460] rounded-sm"
                 onClick={() => {
-                  setModalOpen(true)
-                  setShowFirstModal(true) 
-                  setModalList(false)
+                  // setModalOpen(true)
+                  // setShowFirstModal(true) 
+                  // setModalList(false)
                 }}
               >Get Started
               </a>
@@ -187,9 +187,9 @@ function HomePage() {
             <a 
               className="text-white cursor-pointer hover:bg-white hover:text-[#21C460] py-4 px-8 lg:px-10 lg:py-2 mt-10 font-thin bg-[#21C460] rounded-sm"
               onClick={() => {
-                setModalOpen(true)
-                setShowFirstModal(true) 
-                setModalList(false)
+                // setModalOpen(true)
+                // setShowFirstModal(true) 
+                // setModalList(false)
               }}
               >
               Get Started
